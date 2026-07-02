@@ -1,11 +1,11 @@
 .portfolio-card-background {
-  background-color: #9fd8e8;
+  background-color: #b7ebf7;
   background-position: center;
   background-size: cover;
 }
 
 .dark .portfolio-card-background {
-  background-color: #9fd8e8;
+  background-color: #b7ebf7;
 }
 
 .portfolio-surface {
