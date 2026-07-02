@@ -4,10 +4,6 @@
   background-size: cover;
 }
 
-.dark .portfolio-card-background {
-  background-color: #b7ebf7;
-}
-
 .portfolio-surface {
   border: 3px solid #111827;
   background: rgb(255 255 255 / 0.92);
@@ -15,27 +11,13 @@
   backdrop-filter: blur(8px);
 }
 
-.dark .portfolio-surface {
-  border-color: #111827;
-  background: rgb(255 255 255 / 0.92);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
-}
-
-.portfolio-surface p {
+.portfolio-surface {
   font-family: "Century Gothic", "Trebuchet MS", Arial, sans-serif;
   font-weight: 700;
   line-height: 1.55;
   color: #111827;
 }
 
-.dark .portfolio-surface p {
-  color: #111827;
-}
-
 .portfolio-url {
-  color: #111827;
-}
-
-.dark .portfolio-url {
   color: #111827;
 }
