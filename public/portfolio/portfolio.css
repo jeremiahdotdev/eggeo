@@ -1,7 +1,11 @@
 .portfolio-card-background {
-  background-color: #afd5de;
+  background-color: #9fd8e8;
   background-position: center;
   background-size: cover;
+}
+
+.dark .portfolio-card-background {
+  background-color: #9fd8e8;
 }
 
 .portfolio-surface {
@@ -20,8 +24,12 @@
 .portfolio-surface p {
   font-family: "Century Gothic", "Trebuchet MS", Arial, sans-serif;
   font-weight: 700;
-  line-height: 1.65;
-  color: hsl(var(--foreground));
+  line-height: 1.55;
+  color: #111827;
+}
+
+.dark .portfolio-surface p {
+  color: #111827;
 }
 
 .portfolio-url {
