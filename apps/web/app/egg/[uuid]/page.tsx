@@ -1,0 +1,27 @@
+import { notFound } from 'next/navigation';
+import { prisma } from '@eggeo/db';
+import { EggCard } from '@/components/EggCard';
+import { requirePageSession } from '@/components/RequireAuth';
+
+export default async function EggPage({ params }: { params: Promise<{ uuid: string }> }) {
+  await requirePageSession();
+  const { uuid } = await params;
+  const egg = await prisma.egg.findUnique({
+    where: {
+      id: uuid,
+    },
+    include: {
+      coords: true,
+    },
+  });
+
+  if (!egg) {
+    notFound();
+  }
+
+  return (
+    <main className="page">
+      <EggCard egg={egg} />
+    </main>
+  );
+}

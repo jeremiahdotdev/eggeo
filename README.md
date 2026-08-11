@@ -1,84 +1,46 @@
-# Eggeo Instructions for Installation and Usage
-Our Nuxt.js app is a geolocation-based Easter egg hunt game. Users can create unique Egg IDs, print QR codes for each egg, and then place the QR codes on real Easter eggs. The app automatically sets the current location for each egg based on the user's geolocation. Other users can then scan the QR codes to find the eggs and earn points. The app includes features for viewing rankings, resetting scores, and authentication using Google OAuth2. With pages for user management, map display, rankings, and scanning, our app provides a fun and interactive Easter egg hunt experience for users of all ages.
+# Eggeo
 
-This README provides instructions for installation and usage.
+Eggeo is migrating from a single Nuxt/Vue app into an incremental React and future React Native monorepo.
 
-## Installation
+## Workspace
 
-To get started with this app, follow these steps:
+```text
+apps/
+  vue/        # existing Nuxt/Vue app, kept functional during migration
+  web/        # new React web app shell, no PWA/service-worker layer
 
-1. Clone this repository to your local machine:
+packages/
+  api-client/
+  config/
+  db/
+  domain/
+  types/
+  ui/
+  utils/
+  validation/
 ```
-git clone <repository-url>
+
+## Commands
+
+```sh
+pnpm install
+pnpm --filter @eggeo/vue dev
+pnpm --filter @eggeo/web dev
+pnpm typecheck
+pnpm --filter @eggeo/vue build
+pnpm --filter @eggeo/web build
 ```
-2. Navigate to the project directory:
+
+Prisma lives in `packages/db`. Generate the client with:
+
+```sh
+pnpm db:generate
 ```
-cd <project-directory>
+
+The React web app intentionally does not include PWA tooling. Mobile functionality should land in the future Expo/React Native app instead of a web service-worker layer.
+
+Legacy PWA service-worker generation in the Vue app is disabled by default while the migration is underway:
+
+```sh
+ENABLE_PWA=true pnpm --filter @eggeo/vue build
 ```
-3. Install dependencies using npm or yarn:
-```
-npm install
-# or
-yarn install
-```
-4. Start the development server:
-```
-npm run dev
-# or
-yarn dev
-```
-5. Open your web browser and visit http://localhost:3000 to view the app.
-
-## Usage
-
-This app is a geolocation client designed for Easter egg hunts. Here's a general overview of how to use it:
-
-### Creating Egg IDs
-
-1. Navigate to the **User** section of the app.
-2. Click on the **Create** page.
-3. Generate unique Egg IDs which will be used to identify each Easter egg.
-
-### Printing QR Codes
-
-1. After creating an Egg ID, proceed to the **Print** page within the **User** section.
-2. Print out QR codes corresponding to each Egg ID generated.
-3. Adhere the printed QR codes to the respective Easter eggs.
-
-### Setting Egg Locations
-
-1. To set the current location for an Easter egg, go to the **Hide** page within the **User** section.
-2. Adhere the QR code to the Easter egg.
-3. The app will automatically geolocate the current user and set the location of the Easter egg based on their current location.
-
-### Scanning Easter Eggs
-
-1. Other users can use the **Find** page to scan the QR codes adhered to the Easter eggs they find during the hunt.
-2. Scanning the QR code will display the location of the Easter egg on the map.
-3. Users will receive points for each Easter egg they scan.
-
-### Viewing Rankings
-
-1. Navigate to the **Rankings** page to view the leaderboard.
-2. Users can see their ranking based on the number of Easter eggs scanned.
-
-### Resetting Scores
-
-1. If needed, users can reset their scores by visiting the **Reset Score** page within the **User** section.
-
-### Google Authentication
-
-Authentication within the app is managed using OAuth2 with Google.
-
-### Pages Overview:
-
-- **User**: Manages user-related functionalities.
-  - **Create**: Generate unique Egg IDs.
-  - **Hide**: Automatically sets the current location for Easter eggs.
-  - **Reset Score**: Reset user scores.
-  - **Print**: Print QR codes for Easter eggs.
-- **Map**: Displays the map with Easter egg locations.
-- **Rankings**: Displays the leaderboard.
-- **Find**: Allows users to scan Easter eggs to view their locations.
-
-Feel free to explore and enjoy the Easter egg hunt experience!

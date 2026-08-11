@@ -1,0 +1,5 @@
+{
+  "name": "@eggeo/config",
+  "private": true,
+  "type": "module"
+}
