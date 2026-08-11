@@ -1,4 +1,9 @@
+'use client';
+
 import Link from 'next/link';
+import { Menu } from 'lucide-react';
+import { useState } from 'react';
+import { ColorText } from '@/components/ColorText';
 
 const signedInLinks = [
   { href: '/leaderboard', label: 'Ranking' },
@@ -16,25 +21,41 @@ const setupLinks = [
 ];
 
 export function NavLinks({ isSignedIn, compact = false, setup = false }: { isSignedIn: boolean; compact?: boolean; setup?: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
   const links = setup ? setupLinks : signedInLinks;
+
+  const navLinks = !isSignedIn ? [{ href: '/signin', label: 'Sign In' }] : links;
+  const nav = (
+    <nav className={compact ? 'nav-links' : `nav-links nav-links-menu ${isOpen ? 'is-open' : ''}`} aria-label={compact ? 'Footer' : 'Primary'}>
+      {navLinks.map((link) => (
+        <Link className="nav-link" href={link.href} key={link.href} onClick={() => setIsOpen(false)}>
+          <ColorText>{link.label}</ColorText>
+        </Link>
+      ))}
+    </nav>
+  );
+
+  if (compact) {
+    return nav;
+  }
 
   if (!isSignedIn) {
     return (
-      <nav className="nav-links" aria-label={compact ? 'Footer' : 'Primary'}>
-        <Link className="nav-link" href="/signin">
-          Sign In
-        </Link>
-      </nav>
+      <div className="nav-menu">
+        <button className="nav-toggle" aria-expanded={isOpen} aria-label="Open navigation" onClick={() => setIsOpen((value) => !value)} type="button">
+          <Menu aria-hidden="true" size={26} strokeWidth={3} />
+        </button>
+        {nav}
+      </div>
     );
   }
 
   return (
-    <nav className="nav-links" aria-label={compact ? 'Footer' : 'Primary'}>
-      {links.map((link) => (
-        <Link className="nav-link" href={link.href} key={link.href}>
-          {link.label}
-        </Link>
-      ))}
-    </nav>
+    <div className="nav-menu">
+      <button className="nav-toggle" aria-expanded={isOpen} aria-label="Open navigation" onClick={() => setIsOpen((value) => !value)} type="button">
+        <Menu aria-hidden="true" size={26} strokeWidth={3} />
+      </button>
+      {nav}
+    </div>
   );
 }

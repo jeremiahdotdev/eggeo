@@ -1,5 +1,7 @@
 import { prisma } from '@eggeo/db';
+import { PageTitle } from '@/components/PageTitle';
 import { requirePageSession } from '@/components/RequireAuth';
+import { SkyPage } from '@/components/SkyScene';
 import { displayName } from '@/lib/egg';
 
 const placements = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
@@ -30,8 +32,8 @@ export default async function LeaderboardPage() {
   const users = [...grouped.values()].sort((a, b) => b.points - a.points);
 
   return (
-    <main className="page stack">
-      <h1 className="page-title">LEADERBOARD</h1>
+    <SkyPage>
+      <PageTitle>LEADERBOARD</PageTitle>
       <section className="stack">
         {users.map((user, index) => (
           <article className="leader-card row" key={user.name}>
@@ -41,6 +43,6 @@ export default async function LeaderboardPage() {
           </article>
         ))}
       </section>
-    </main>
+    </SkyPage>
   );
 }

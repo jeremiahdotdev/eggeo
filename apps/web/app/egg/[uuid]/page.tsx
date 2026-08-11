@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@eggeo/db';
 import { EggCard } from '@/components/EggCard';
 import { requirePageSession } from '@/components/RequireAuth';
+import { SkyPage } from '@/components/SkyScene';
 
 export default async function EggPage({ params }: { params: Promise<{ uuid: string }> }) {
   await requirePageSession();
@@ -20,8 +21,8 @@ export default async function EggPage({ params }: { params: Promise<{ uuid: stri
   }
 
   return (
-    <main className="page">
+    <SkyPage>
       <EggCard egg={egg} />
-    </main>
+    </SkyPage>
   );
 }

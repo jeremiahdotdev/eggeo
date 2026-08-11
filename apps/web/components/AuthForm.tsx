@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiRequest } from '@/lib/clientApi';
+import { PageTitle } from '@/components/PageTitle';
 
 type Mode = 'login' | 'create';
 
@@ -44,7 +45,7 @@ export function AuthForm() {
 
   return (
     <form className="panel stack" onSubmit={submit}>
-      <h1 className="page-title">{mode === 'login' ? 'Log in' : 'Create account'}</h1>
+      <PageTitle>{mode === 'login' ? 'Log in' : 'Create account'}</PageTitle>
       {mode === 'create' ? (
         <label className="field">
           <span>Name</span>

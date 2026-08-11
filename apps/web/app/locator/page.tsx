@@ -1,7 +1,14 @@
 import { NearbyEggs } from '@/components/NearbyEggs';
 import { requirePageSession } from '@/components/RequireAuth';
+import { SkyScene } from '@/components/SkyScene';
 
 export default async function LocatorPage() {
   await requirePageSession();
-  return <NearbyEggs />;
+  const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY ?? process.env.NUXT_PUBLIC_MAPS_API_KEY ?? '';
+
+  return (
+    <SkyScene className="locator-scene">
+      <NearbyEggs mapsApiKey={mapsApiKey} />
+    </SkyScene>
+  );
 }

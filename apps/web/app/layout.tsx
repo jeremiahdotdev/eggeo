@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import './globals.css';
 import { getSession } from '@/lib/session';
+import { ColorText } from '@/components/ColorText';
 import { EggIcon } from '@/components/EggIcon';
 import { NavLinks } from '@/components/NavLinks';
 
@@ -20,8 +21,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <header className="top-nav">
             <div className="nav-inner">
               <Link className="brand" href={session ? '/dashboard' : '/'}>
-                <EggIcon size={28} color="#ffd75a" />
-                <span>Eggeo</span>
+                <EggIcon size={28} seed="header-eggeo" strokeWidth={8} />
+                <ColorText>Eggeo</ColorText>
               </Link>
               <NavLinks isSignedIn={Boolean(session)} />
             </div>

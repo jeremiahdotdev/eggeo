@@ -40,13 +40,13 @@ importers:
         version: 2.4.3
       next:
         specifier: 13.5.11
-        version: 13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: 4.21.1
-        version: 4.21.1(next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 4.21.1(next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nuxt:
         specifier: 3.16.2
-        version: 3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0)
+        version: 3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0)
       qrcode.vue:
         specifier: ^3.4.1
         version: 3.10.0(vue@3.4.21(typescript@5.9.3))
@@ -74,7 +74,7 @@ importers:
     devDependencies:
       '@sidebase/nuxt-auth':
         specifier: 0.7.0
-        version: 0.7.0(magicast@0.5.4)(next-auth@4.21.1(next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(oxc-parser@0.56.5)(srvx@0.11.22)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+        version: 0.7.0(magicast@0.5.4)(next-auth@4.21.1(next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(oxc-parser@0.56.5)(srvx@0.11.22)
       '@types/bcryptjs':
         specifier: 2.4.6
         version: 2.4.6
@@ -83,13 +83,13 @@ importers:
         version: 0.2.6
       '@vite-pwa/nuxt':
         specifier: 0.6.0
-        version: 0.6.0(@vite-pwa/assets-generator@0.2.6)(magicast@0.5.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+        version: 0.6.0(@vite-pwa/assets-generator@0.2.6)(magicast@0.5.4)
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.11.1(vue@3.4.21(typescript@5.9.3))
       '@vueuse/nuxt':
         specifier: ^10.9.0
-        version: 10.11.1(magicast@0.5.4)(nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0))(vue@3.4.21(typescript@5.9.3))
+        version: 10.11.1(magicast@0.5.4)(nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0))(vue@3.4.21(typescript@5.9.3))
       autoprefixer:
         specifier: ^10.4.18
         version: 10.5.4(postcss@8.5.26)
@@ -104,7 +104,7 @@ importers:
         version: 5.9.3
       vite-plugin-pwa:
         specifier: 0.19.7
-        version: 0.19.7(@vite-pwa/assets-generator@0.2.6)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+        version: 0.19.7(@vite-pwa/assets-generator@0.2.6)
       vue-tsc:
         specifier: ^1.8.27
         version: 1.8.27(typescript@5.9.3)
@@ -129,9 +129,18 @@ importers:
       '@eggeo/validation':
         specifier: workspace:*
         version: link:../../packages/validation
+      '@react-google-maps/api':
+        specifier: ^2.20.8
+        version: 2.20.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       bcryptjs:
         specifier: 2.4.3
         version: 2.4.3
+      jsqr:
+        specifier: ^1.4.0
+        version: 1.4.0
+      lucide-react:
+        specifier: ^1.31.0
+        version: 1.31.0(react@19.2.8)
       next:
         specifier: 16.3.0
         version: 16.3.0(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1254,6 +1263,12 @@ packages:
   '@googlemaps/js-api-loader@1.16.10':
     resolution: {integrity: sha512-c2erv2k7P2ilYzMmtYcMgAR21AULosQuUHJbStnrvRk2dG93k5cqptDrh9A8p+ZNlyhiqEOgHW7N9PAizdUM7Q==}
 
+  '@googlemaps/js-api-loader@1.16.8':
+    resolution: {integrity: sha512-CROqqwfKotdO6EBjZO/gQGVTbeDps5V7Mt9+8+5Q+jTg5CRMi3Ii/L9PmV3USROrt2uWxtGzJHORmByxyo9pSQ==}
+
+  '@googlemaps/markerclusterer@2.5.3':
+    resolution: {integrity: sha512-x7lX0R5yYOoiNectr10wLgCBasNcXFHiADIBdmn7jQllF2B5ENQw5XtZK+hIw4xnV0Df0xhN4LN98XqA5jaiOw==}
+
   '@googlemaps/markerclusterer@2.6.2':
     resolution: {integrity: sha512-U6uVhq8iWhiIckA89sgRu8OK35mjd6/3CuoZKWakKEf0QmRRWpatlsPb3kqXkoWSmbcZkopRiI4dnW6DQSd7bQ==}
 
@@ -1744,6 +1759,18 @@ packages:
   '@prisma/get-platform@5.11.0':
     resolution: {integrity: sha512-rxtHpMLxNTHxqWuGOLzR2QOyQi79rK1u1XYAVLZxDGTLz/A+uoDnjz9veBFlicrpWjwuieM4N6jcnjj/DDoidw==}
 
+  '@react-google-maps/api@2.20.8':
+    resolution: {integrity: sha512-wtLYFtCGXK3qbIz1H5to3JxbosPnKsvjDKhqGylXUb859EskhzR7OpuNt0LqdLarXUtZCJTKzPn3BNaekNIahg==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19
+      react-dom: ^16.8 || ^17 || ^18 || ^19
+
+  '@react-google-maps/infobox@2.20.0':
+    resolution: {integrity: sha512-03PJHjohhaVLkX6+NHhlr8CIlvUxWaXhryqDjyaZ8iIqqix/nV8GFdz9O3m5OsjtxtNho09F/15j14yV0nuyLQ==}
+
+  '@react-google-maps/marker-clusterer@2.20.0':
+    resolution: {integrity: sha512-tieX9Va5w1yP88vMgfH1pHTacDQ9TgDTjox3tLlisKDXRQWdjw+QeVVghhf5XqqIxXHgPdcGwBvKY6UP+SIvLw==}
+
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
@@ -2060,6 +2087,9 @@ packages:
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
+
+  '@types/google.maps@3.58.1':
+    resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
 
   '@types/node@20.19.43':
     resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
@@ -3385,6 +3415,9 @@ packages:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
 
+  invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+
   ioredis@5.11.1:
     resolution: {integrity: sha512-ehuGcf94bQXhfagULNXrJdfnWO38v070jxSx/qE87Kjzmu2fU7ro5EFAb+OPituLqgfyuQaym5DlrNydW2sJ9A==}
     engines: {node: '>=12.22.0'}
@@ -3633,6 +3666,9 @@ packages:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
 
+  jsqr@1.4.0:
+    resolution: {integrity: sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==}
+
   kdbush@4.1.0:
     resolution: {integrity: sha512-e9vurzrXJQrFX6ckpHP3bvj5l+9CnYzkxDNnNQ1h2QTqdWsUAJgXiKdGNcOa1EY85dU8KbQ+z/FdQdB7P+9yfQ==}
 
@@ -3715,6 +3751,11 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
+
+  lucide-react@1.31.0:
+    resolution: {integrity: sha512-G8u2eEtoHUnUa9f8lbvqDhCiORMnYLdUEo06EEG9MQvHQrInKcX3Pa2TH39MM5qyzRcWETxB0+aOwAPI1g1kEg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   magic-string-ast@0.7.1:
     resolution: {integrity: sha512-ub9iytsEbT7Yw/Pd29mSo/cNQpaEu67zR1VVcXDiYjSFwzeBxNdTd0FMnSslLQXiRj8uGPzwsaoefrMD5XAmdw==}
@@ -6669,6 +6710,13 @@ snapshots:
 
   '@googlemaps/js-api-loader@1.16.10': {}
 
+  '@googlemaps/js-api-loader@1.16.8': {}
+
+  '@googlemaps/markerclusterer@2.5.3':
+    dependencies:
+      fast-deep-equal: 3.1.3
+      supercluster: 8.0.1
+
   '@googlemaps/markerclusterer@2.6.2':
     dependencies:
       '@types/supercluster': 7.1.3
@@ -6960,11 +7008,10 @@ snapshots:
 
   '@nuxt/devalue@2.0.2': {}
 
-  '@nuxt/devtools-kit@2.7.0(magicast@0.3.5)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))':
+  '@nuxt/devtools-kit@2.7.0(magicast@0.3.5)':
     dependencies:
       '@nuxt/kit': 3.21.11(magicast@0.3.5)
       execa: 8.0.1
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
     transitivePeerDependencies:
       - magicast
 
@@ -6979,12 +7026,12 @@ snapshots:
       prompts: 2.4.2
       semver: 7.8.5
 
-  '@nuxt/devtools@2.7.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))':
+  '@nuxt/devtools@2.7.0(vue@3.5.41(typescript@5.9.3))':
     dependencies:
-      '@nuxt/devtools-kit': 2.7.0(magicast@0.3.5)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      '@nuxt/devtools-kit': 2.7.0(magicast@0.3.5)
       '@nuxt/devtools-wizard': 2.7.0
       '@nuxt/kit': 3.21.11(magicast@0.3.5)
-      '@vue/devtools-core': 7.7.10(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))
+      '@vue/devtools-core': 7.7.10(vue@3.5.41(typescript@5.9.3))
       '@vue/devtools-kit': 7.7.10
       birpc: 2.9.0
       consola: 3.4.2
@@ -7009,9 +7056,8 @@ snapshots:
       sirv: 3.0.2
       structured-clone-es: 1.0.0
       tinyglobby: 0.2.17
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
-      vite-plugin-inspect: 11.4.1(@nuxt/kit@3.21.11(magicast@0.3.5))(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
-      vite-plugin-vue-tracer: 1.5.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))
+      vite-plugin-inspect: 11.4.1(@nuxt/kit@3.21.11(magicast@0.3.5))
+      vite-plugin-vue-tracer: 1.5.0(vue@3.5.41(typescript@5.9.3))
       which: 5.0.0
       ws: 8.21.3
     transitivePeerDependencies:
@@ -7265,6 +7311,21 @@ snapshots:
     dependencies:
       '@prisma/debug': 5.11.0
 
+  '@react-google-maps/api@2.20.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@googlemaps/js-api-loader': 1.16.8
+      '@googlemaps/markerclusterer': 2.5.3
+      '@react-google-maps/infobox': 2.20.0
+      '@react-google-maps/marker-clusterer': 2.20.0
+      '@types/google.maps': 3.58.1
+      invariant: 2.2.4
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+
+  '@react-google-maps/infobox@2.20.0': {}
+
+  '@react-google-maps/marker-clusterer@2.20.0': {}
+
   '@rolldown/pluginutils@1.0.1': {}
 
   '@rollup/plugin-alias@6.0.0(rollup@4.62.4)':
@@ -7437,14 +7498,14 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.62.4':
     optional: true
 
-  '@sidebase/nuxt-auth@0.7.0(magicast@0.5.4)(next-auth@4.21.1(next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(oxc-parser@0.56.5)(srvx@0.11.22)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))':
+  '@sidebase/nuxt-auth@0.7.0(magicast@0.5.4)(next-auth@4.21.1(next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(oxc-parser@0.56.5)(srvx@0.11.22)':
     dependencies:
       '@nuxt/kit': 3.21.11(magicast@0.5.4)
       defu: 6.1.7
       h3: 1.15.11
       knitwork: 1.3.0
-      next-auth: 4.21.1(next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      nitropack: 2.13.4(oxc-parser@0.56.5)(srvx@0.11.22)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      next-auth: 4.21.1(next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      nitropack: 2.13.4(oxc-parser@0.56.5)(srvx@0.11.22)
       requrl: 3.0.2
       ufo: 1.6.4
     transitivePeerDependencies:
@@ -7555,6 +7616,8 @@ snapshots:
 
   '@types/geojson@7946.0.16': {}
 
+  '@types/google.maps@3.58.1': {}
+
   '@types/node@20.19.43':
     dependencies:
       undici-types: 6.21.0
@@ -7643,12 +7706,12 @@ snapshots:
       - bare-buffer
       - react-native-b4a
 
-  '@vite-pwa/nuxt@0.6.0(@vite-pwa/assets-generator@0.2.6)(magicast@0.5.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))':
+  '@vite-pwa/nuxt@0.6.0(@vite-pwa/assets-generator@0.2.6)(magicast@0.5.4)':
     dependencies:
       '@nuxt/kit': 3.21.11(magicast@0.5.4)
       pathe: 1.1.2
       ufo: 1.6.4
-      vite-plugin-pwa: 0.19.7(@vite-pwa/assets-generator@0.2.6)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      vite-plugin-pwa: 0.19.7(@vite-pwa/assets-generator@0.2.6)
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.6
     transitivePeerDependencies:
@@ -7788,14 +7851,14 @@ snapshots:
 
   '@vue/devtools-api@6.6.4': {}
 
-  '@vue/devtools-core@7.7.10(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))':
+  '@vue/devtools-core@7.7.10(vue@3.5.41(typescript@5.9.3))':
     dependencies:
       '@vue/devtools-kit': 7.7.10
       '@vue/devtools-shared': 7.7.10
       mitt: 3.0.1
       nanoid: 5.1.16
       pathe: 2.0.3
-      vite-hot-client: 2.2.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      vite-hot-client: 2.2.0
       vue: 3.5.41(typescript@5.9.3)
     transitivePeerDependencies:
       - vite
@@ -7897,13 +7960,13 @@ snapshots:
 
   '@vueuse/metadata@10.11.1': {}
 
-  '@vueuse/nuxt@10.11.1(magicast@0.5.4)(nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0))(vue@3.4.21(typescript@5.9.3))':
+  '@vueuse/nuxt@10.11.1(magicast@0.5.4)(nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0))(vue@3.4.21(typescript@5.9.3))':
     dependencies:
       '@nuxt/kit': 3.21.11(magicast@0.5.4)
       '@vueuse/core': 10.11.1(vue@3.4.21(typescript@5.9.3))
       '@vueuse/metadata': 10.11.1
       local-pkg: 0.5.1
-      nuxt: 3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0)
+      nuxt: 3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0)
       vue-demi: 0.14.10(vue@3.4.21(typescript@5.9.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -9146,6 +9209,10 @@ snapshots:
       hasown: 2.0.4
       side-channel: 1.1.1
 
+  invariant@2.2.4:
+    dependencies:
+      loose-envify: 1.4.0
+
   ioredis@5.11.1:
     dependencies:
       '@ioredis/commands': 1.10.0
@@ -9373,6 +9440,8 @@ snapshots:
 
   jsonpointer@5.0.1: {}
 
+  jsqr@1.4.0: {}
+
   kdbush@4.1.0: {}
 
   kleur@3.0.3: {}
@@ -9453,6 +9522,10 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-react@1.31.0(react@19.2.8):
+    dependencies:
+      react: 19.2.8
 
   magic-string-ast@0.7.1:
     dependencies:
@@ -9572,13 +9645,13 @@ snapshots:
 
   napi-build-utils@2.0.0: {}
 
-  next-auth@4.21.1(next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next-auth@4.21.1(next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.29.7
       '@panva/hkdf': 1.2.1
       cookie: 0.5.0
       jose: 4.15.9
-      next: 13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       oauth: 0.9.15
       openid-client: 5.7.1
       preact: 10.29.8(preact-render-to-string@5.2.6)
@@ -9587,7 +9660,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       uuid: 8.3.2
 
-  next@13.5.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@13.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 13.5.11
       '@swc/helpers': 0.5.2
@@ -9596,7 +9669,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.29.7)(react@18.3.1)
+      styled-jsx: 5.1.1(react@18.3.1)
       watchpack: 2.4.0
     optionalDependencies:
       '@next/swc-darwin-arm64': 13.5.9
@@ -9637,7 +9710,7 @@ snapshots:
       - '@types/node'
       - babel-plugin-macros
 
-  nitropack@2.13.4(oxc-parser@0.56.5)(srvx@0.11.22)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  nitropack@2.13.4(oxc-parser@0.56.5)(srvx@0.11.22):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.2
       '@rollup/plugin-alias': 6.0.0(rollup@4.62.4)
@@ -9702,7 +9775,7 @@ snapshots:
       uncrypto: 0.1.3
       unctx: 2.5.0
       unenv: 2.0.0-rc.24
-      unimport: 6.4.0(esbuild@0.28.2)(oxc-parser@0.56.5)(rollup@4.62.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      unimport: 6.4.0(esbuild@0.28.2)(oxc-parser@0.56.5)(rollup@4.62.4)
       unplugin-utils: 0.3.2
       unstorage: 1.17.5(db0@0.3.4)(ioredis@5.11.1)
       untyped: 2.0.0
@@ -9788,11 +9861,11 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0):
+  nuxt@3.16.2(@types/node@26.2.0)(cac@6.7.14)(db0@0.3.4)(ioredis@5.11.1)(magicast@0.5.4)(rollup@4.62.4)(srvx@0.11.22)(terser@5.49.2)(typescript@5.9.3)(vue-tsc@1.8.27(typescript@5.9.3))(yaml@2.9.0):
     dependencies:
       '@nuxt/cli': 3.37.0(@nuxt/schema@3.16.2)(cac@6.7.14)(magicast@0.5.4)
       '@nuxt/devalue': 2.0.2
-      '@nuxt/devtools': 2.7.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))
+      '@nuxt/devtools': 2.7.0(vue@3.5.41(typescript@5.9.3))
       '@nuxt/kit': 3.16.2(magicast@0.5.4)
       '@nuxt/schema': 3.16.2
       '@nuxt/telemetry': 2.8.0(@nuxt/kit@3.16.2(magicast@0.5.4))
@@ -9825,7 +9898,7 @@ snapshots:
       mlly: 1.8.2
       mocked-exports: 0.1.1
       nanotar: 0.2.1
-      nitropack: 2.13.4(oxc-parser@0.56.5)(srvx@0.11.22)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      nitropack: 2.13.4(oxc-parser@0.56.5)(srvx@0.11.22)
       nypm: 0.6.9
       ofetch: 1.5.1
       ohash: 2.0.11
@@ -10931,12 +11004,10 @@ snapshots:
 
   structured-clone-es@1.0.0: {}
 
-  styled-jsx@5.1.1(@babel/core@7.29.7)(react@18.3.1):
+  styled-jsx@5.1.1(react@18.3.1):
     dependencies:
       client-only: 0.0.1
       react: 18.3.1
-    optionalDependencies:
-      '@babel/core': 7.29.7
 
   styled-jsx@5.1.6(react@19.2.8):
     dependencies:
@@ -11256,7 +11327,7 @@ snapshots:
       unplugin: 2.3.11
       unplugin-utils: 0.2.5
 
-  unimport@6.4.0(esbuild@0.28.2)(oxc-parser@0.56.5)(rollup@4.62.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  unimport@6.4.0(esbuild@0.28.2)(oxc-parser@0.56.5)(rollup@4.62.4):
     dependencies:
       acorn: 8.18.0
       escape-string-regexp: 5.0.0
@@ -11270,7 +11341,7 @@ snapshots:
       scule: 1.3.0
       strip-literal: 4.0.0
       tinyglobby: 0.2.17
-      unplugin: 3.3.0(esbuild@0.28.2)(rollup@4.62.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      unplugin: 3.3.0(esbuild@0.28.2)(rollup@4.62.4)
       unplugin-utils: 0.3.2
     optionalDependencies:
       oxc-parser: 0.56.5
@@ -11329,7 +11400,7 @@ snapshots:
       picomatch: 4.0.5
       webpack-virtual-modules: 0.6.2
 
-  unplugin@3.3.0(esbuild@0.28.2)(rollup@4.62.4)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  unplugin@3.3.0(esbuild@0.28.2)(rollup@4.62.4):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.5
@@ -11337,7 +11408,6 @@ snapshots:
     optionalDependencies:
       esbuild: 0.28.2
       rollup: 4.62.4
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
 
   unstorage@1.17.5(db0@0.3.4)(ioredis@5.11.1):
     dependencies:
@@ -11388,15 +11458,12 @@ snapshots:
 
   validator@13.15.35: {}
 
-  vite-dev-rpc@2.0.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  vite-dev-rpc@2.0.0:
     dependencies:
       birpc: 4.1.0
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
-      vite-hot-client: 2.2.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      vite-hot-client: 2.2.0
 
-  vite-hot-client@2.2.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
-    dependencies:
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
+  vite-hot-client@2.2.0: {}
 
   vite-node@3.2.4(@types/node@26.2.0)(terser@5.49.2):
     dependencies:
@@ -11432,7 +11499,7 @@ snapshots:
       typescript: 5.9.3
       vue-tsc: 1.8.27(typescript@5.9.3)
 
-  vite-plugin-inspect@11.4.1(@nuxt/kit@3.21.11(magicast@0.3.5))(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  vite-plugin-inspect@11.4.1(@nuxt/kit@3.21.11(magicast@0.3.5)):
     dependencies:
       ansis: 4.3.1
       error-stack-parser-es: 1.0.5
@@ -11442,17 +11509,15 @@ snapshots:
       perfect-debounce: 2.1.0
       sirv: 3.0.2
       unplugin-utils: 0.3.2
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
-      vite-dev-rpc: 2.0.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))
+      vite-dev-rpc: 2.0.0
     optionalDependencies:
       '@nuxt/kit': 3.21.11(magicast@0.3.5)
 
-  vite-plugin-pwa@0.19.7(@vite-pwa/assets-generator@0.2.6)(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)):
+  vite-plugin-pwa@0.19.7(@vite-pwa/assets-generator@0.2.6):
     dependencies:
       debug: 4.4.3
       fast-glob: 3.3.3
       pretty-bytes: 6.1.1
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
       workbox-build: 7.0.0
       workbox-window: 7.0.0
     optionalDependencies:
@@ -11461,14 +11526,13 @@ snapshots:
       - '@types/babel__core'
       - supports-color
 
-  vite-plugin-vue-tracer@1.5.0(vite@6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3)):
+  vite-plugin-vue-tracer@1.5.0(vue@3.5.41(typescript@5.9.3)):
     dependencies:
       estree-walker: 3.0.3
       exsolve: 1.1.1
       magic-string: 1.1.0
       pathe: 2.0.3
       source-map-js: 1.2.1
-      vite: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.49.2)(yaml@2.9.0)
       vue: 3.5.41(typescript@5.9.3)
 
   vite@5.4.21(@types/node@26.2.0)(terser@5.49.2):

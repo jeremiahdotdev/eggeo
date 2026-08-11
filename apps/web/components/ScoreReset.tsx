@@ -18,13 +18,11 @@ export function ScoreReset({ initialPoints }: { initialPoints: number }) {
   }
 
   return (
-    <section className="hero">
-      <div className="hero-inner stack">
-        <h1>{points}</h1>
-        <button className="button danger" disabled={isSubmitting} onClick={resetScore} type="button">
-          RESET SCORE
-        </button>
-      </div>
+    <section className="hero-inner stack">
+      <h1>{points}</h1>
+      <button className="button danger" disabled={isSubmitting} onClick={resetScore} type="button">
+        RESET SCORE
+      </button>
     </section>
   );
 }

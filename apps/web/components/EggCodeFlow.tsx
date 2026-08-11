@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { EggIcon } from '@/components/EggIcon';
+import { PageTitle } from '@/components/PageTitle';
+import { QrScanner } from '@/components/QrScanner';
 import { apiRequest } from '@/lib/clientApi';
 import { isUuid, parseEggFromLink } from '@/lib/egg';
 
@@ -19,10 +21,10 @@ export function FindEggFlow() {
   const [foundEgg, setFoundEgg] = useState<FoundEgg>();
   const [message, setMessage] = useState('');
   const [isCollecting, setIsCollecting] = useState(false);
+  const [isFinding, setIsFinding] = useState(false);
 
-  async function findEgg(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const id = parseEggFromLink(input);
+  async function performFind(value: string) {
+    const id = parseEggFromLink(value);
     setMessage('');
 
     if (!isUuid(id)) {
@@ -30,11 +32,15 @@ export function FindEggFlow() {
       return;
     }
 
+    setInput(id);
+    setIsFinding(true);
     try {
       const response = await apiRequest<FoundEgg>(`/api/eggs/${id}/find`, {});
       setFoundEgg(response);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to find egg.');
+    } finally {
+      setIsFinding(false);
     }
   }
 
@@ -54,17 +60,9 @@ export function FindEggFlow() {
   }
 
   return (
-    <section className="page stack">
-      <h1 className="page-title">Find</h1>
-      <form className="panel stack" onSubmit={findEgg}>
-        <label className="field">
-          <span>Egg code or link</span>
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Paste a code or /egg/... link" />
-        </label>
-        <button className="button" type="submit">
-          Find Egg
-        </button>
-      </form>
+    <section className="stack">
+      <PageTitle>Find</PageTitle>
+      <QrScanner disabled={isFinding || isCollecting} onDetect={performFind} />
       {foundEgg ? (
         <section className="panel stack">
           <div className="row">
@@ -90,9 +88,8 @@ export function HideEggFlow() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function hideEgg(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const id = parseEggFromLink(input);
+  function performHide(value: string) {
+    const id = parseEggFromLink(value);
     setMessage('');
 
     if (!isUuid(id)) {
@@ -105,6 +102,7 @@ export function HideEggFlow() {
       return;
     }
 
+    setInput(id);
     setIsSubmitting(true);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -131,17 +129,9 @@ export function HideEggFlow() {
   }
 
   return (
-    <section className="page stack">
-      <h1 className="page-title">Hide</h1>
-      <form className="panel stack" onSubmit={hideEgg}>
-        <label className="field">
-          <span>Egg code or link</span>
-          <input value={input} onChange={(event) => setInput(event.target.value)} placeholder="Paste a code or /egg/... link" />
-        </label>
-        <button className="button" disabled={isSubmitting} type="submit">
-          Hide Egg Here
-        </button>
-      </form>
+    <section className="stack">
+      <PageTitle>Hide</PageTitle>
+      <QrScanner disabled={isSubmitting} onDetect={performHide} />
       {message ? <p className="message">{message}</p> : null}
     </section>
   );

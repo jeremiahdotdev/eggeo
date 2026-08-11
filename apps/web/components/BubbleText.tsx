@@ -13,16 +13,18 @@ export function BubbleLabel({
   children,
   className,
   color,
+  style,
 }: {
   box?: string;
   children: React.ReactNode;
   className?: string;
   color?: string;
+  style?: React.CSSProperties;
 }) {
   const text = String(children ?? '');
 
   return (
-    <svg className={`bubble-svg ${className ?? ''}`} preserveAspectRatio="xMidYMid meet" viewBox={box}>
+    <svg className={`bubble-svg ${className ?? ''}`} preserveAspectRatio="xMidYMid meet" style={style} viewBox={box}>
       <text className="bubble-text" dominantBaseline="middle" fill={color ?? colorFor(text)} textAnchor="middle" x="50%" y="51%">
         {children}
       </text>
@@ -36,14 +38,16 @@ export function BubbleDigits({ label }: { label: string }) {
       {label
         .toUpperCase()
         .split(' ')
-        .map((word) => (
+        .map((word, wordIndex) => (
           <span className="bubble-word" key={word}>
             {word.split('').map((digit, index) => {
               const isSmall = digit === 'I';
+              const color = easterFills[(wordIndex * 7 + index) % easterFills.length];
               return (
                 <BubbleLabel
                   box={isSmall ? '0 -10 25 60' : '0 -10 50 60'}
                   className={isSmall ? 'bubble-letter bubble-letter-small' : 'bubble-letter'}
+                  color={color}
                   key={`${digit}-${index}`}
                 >
                   {digit}

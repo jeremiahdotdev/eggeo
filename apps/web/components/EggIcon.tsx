@@ -50,11 +50,13 @@ export function EggIcon({
   seed = 'eggeo',
   showGrass = false,
   size = 84,
+  strokeWidth = 3,
 }: {
   color?: string | null;
   seed?: string;
   showGrass?: boolean;
   size?: number;
+  strokeWidth?: number;
 }) {
   const gradientId = `egg-gradient-${hash(`${seed}-${color ?? ''}`)}`;
   const [stop1, stop2, stop3] = colorsFor(seed, color);
@@ -67,7 +69,7 @@ export function EggIcon({
       height={Math.round(size * 1.18)}
       role="img"
       stroke="#000"
-      strokeWidth={3}
+      strokeWidth={strokeWidth}
       viewBox={showGrass ? '-165 -90 600 400' : '0 -80 270 400'}
       width={size}
       xmlns="http://www.w3.org/2000/svg"

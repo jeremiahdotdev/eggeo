@@ -1,13 +1,15 @@
 import { CreateEggForm } from '@/components/CreateEggForm';
+import { PageTitle } from '@/components/PageTitle';
 import { requirePageSession } from '@/components/RequireAuth';
+import { SkyPage } from '@/components/SkyScene';
 
 export default async function CreatePage() {
   await requirePageSession();
 
   return (
-    <main className="page stack" style={{ maxWidth: 760 }}>
-      <h1 className="page-title">Create an Egg</h1>
+    <SkyPage className="create-page">
+      <PageTitle>Create an Egg</PageTitle>
       <CreateEggForm />
-    </main>
+    </SkyPage>
   );
 }
