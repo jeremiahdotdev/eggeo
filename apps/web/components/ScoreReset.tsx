@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { EggeoButton } from '@eggeo/ui';
 import { apiRequest } from '@/lib/clientApi';
 
 export function ScoreReset({ initialPoints }: { initialPoints: number }) {
@@ -20,9 +21,9 @@ export function ScoreReset({ initialPoints }: { initialPoints: number }) {
   return (
     <section className="hero-inner stack">
       <h1>{points}</h1>
-      <button className="button danger" disabled={isSubmitting} onClick={resetScore} type="button">
+      <EggeoButton disabled={isSubmitting} intent="danger" onPress={resetScore}>
         RESET SCORE
-      </button>
+      </EggeoButton>
     </section>
   );
 }

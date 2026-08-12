@@ -7,6 +7,9 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@eggeo/validation": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.4.3"
   }

@@ -91,7 +91,7 @@ export function EggIcon({
           transform="scale(0.9 1)"
         />
       </g>
-      {showGrass ? (
+      {showGrass && (
         <g aria-hidden="true" className="egg-grass-svg">
           {['translate(105 110)', 'translate(-130 110)'].map((transform) => (
             <g key={transform} transform={transform}>
@@ -146,7 +146,7 @@ export function EggIcon({
             </g>
           ))}
         </g>
-      ) : null}
+      )}
     </svg>
   );
 }

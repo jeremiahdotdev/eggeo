@@ -2,8 +2,7 @@
 
 import { GoogleMap, OverlayView, useJsApiLoader } from '@react-google-maps/api';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { EggIcon } from '@/components/EggIcon';
-import { PageTitle } from '@/components/PageTitle';
+import { EggIcon, EggeoButton, EggeoText } from '@eggeo/ui';
 import { UserMarker } from '@/components/UserMarker';
 import { apiRequest } from '@/lib/clientApi';
 
@@ -41,6 +40,7 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
   const mapRef = useRef<google.maps.Map | null>(null);
   const [center, setCenter] = useState<Location>(defaultCenter);
   const [eggs, setEggs] = useState<NearbyEgg[]>([]);
+  const [locationMessage, setLocationMessage] = useState('Finding your location...');
   const [selectedEgg, setSelectedEgg] = useState<NearbyEgg | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: mapsApiKey,
@@ -74,6 +74,7 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
 
   useEffect(() => {
     if (!navigator.geolocation) {
+      setLocationMessage('Location is not available in this browser.');
       return;
     }
 
@@ -84,10 +85,13 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
           lng: position.coords.longitude,
         };
         setCenter(nextCenter);
+        setLocationMessage('');
         mapRef.current?.panTo(nextCenter);
         void loadNearby(nextCenter);
       },
-      () => {},
+      () => {
+        setLocationMessage('Allow location access to center the map and show nearby eggs.');
+      },
       {
         enableHighAccuracy: true,
         maximumAge: 30000,
@@ -101,7 +105,9 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
   if (!mapsApiKey) {
     return (
       <section className="locator-map-fallback panel stack">
-        <PageTitle>Map</PageTitle>
+        <EggeoText colorized variant="pageTitle">
+          Map
+        </EggeoText>
         <p className="message error">Add NEXT_PUBLIC_MAPS_API_KEY or NUXT_PUBLIC_MAPS_API_KEY to enable the map.</p>
       </section>
     );
@@ -110,7 +116,9 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
   if (loadError) {
     return (
       <section className="locator-map-fallback panel stack">
-        <PageTitle>Map</PageTitle>
+        <EggeoText colorized variant="pageTitle">
+          Map
+        </EggeoText>
         <p className="message error">Unable to load Google Maps.</p>
       </section>
     );
@@ -154,19 +162,20 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
           })}
         </GoogleMap>
       )}
-      {selectedEgg ? (
+      {locationMessage && <div className="locator-map-status panel">{locationMessage}</div>}
+      {selectedEgg && (
         <aside className="locator-egg-popover panel stack">
           <div className="row">
             <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
-            <button className="button ghost" onClick={() => setSelectedEgg(null)} type="button">
+            <EggeoButton intent="ghost" onPress={() => setSelectedEgg(null)}>
               Close
-            </button>
+            </EggeoButton>
           </div>
           <strong>{selectedEgg.title || 'Hidden egg'}</strong>
-          {selectedEgg.description ? <p>{selectedEgg.description}</p> : null}
+          {selectedEgg.description && <p>{selectedEgg.description}</p>}
           <span>{Math.abs(selectedEgg.points ?? 1) === 1 ? `${selectedEgg.points ?? 1} pt.` : `${selectedEgg.points ?? 1} pts.`}</span>
         </aside>
-      ) : null}
+      )}
     </section>
   );
 }

@@ -1,5 +1,5 @@
+import { EggeoText } from '@eggeo/ui';
 import { CreateEggForm } from '@/components/CreateEggForm';
-import { PageTitle } from '@/components/PageTitle';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyPage } from '@/components/SkyScene';
 
@@ -8,7 +8,9 @@ export default async function CreatePage() {
 
   return (
     <SkyPage className="create-page">
-      <PageTitle>Create an Egg</PageTitle>
+      <EggeoText colorized variant="pageTitle">
+        Create an Egg
+      </EggeoText>
       <CreateEggForm />
     </SkyPage>
   );

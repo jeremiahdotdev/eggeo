@@ -1,6 +1,6 @@
 import { prisma } from '@eggeo/db';
-import { BubbleDigits, BubbleLabel } from '@/components/BubbleText';
-import { EggIcon } from '@/components/EggIcon';
+import { appText } from '@eggeo/static-text';
+import { EggIcon, EggeoText } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyScene } from '@/components/SkyScene';
 
@@ -24,13 +24,18 @@ export default async function DashboardPage() {
     <SkyScene className="home-hero" variant="home">
       <section className="home-inner">
         <div className="home-title-lock">
-          <BubbleDigits label="Eggeo" />
+          <EggeoText colorized style={{ fontSize: 96, lineHeight: 104 }} variant="title">
+            {appText.brand.title}
+          </EggeoText>
         </div>
         <div className="home-egg">
-          <EggIcon seed="dashboard-eggeo" size={220} />
-          <BubbleLabel box="0 0 260 130" className="score-bubble" color="#ffffff">
-            {points}
-          </BubbleLabel>
+          <div className="home-hill" aria-hidden="true" />
+          <EggIcon seed="dashboard-eggeo" size={360} showGrass />
+          <div className="score-bubble">
+            <EggeoText colorized style={{ fontSize: 58, lineHeight: 64 }} variant="title">
+              {String(points)}
+            </EggeoText>
+          </div>
         </div>
       </section>
     </SkyScene>

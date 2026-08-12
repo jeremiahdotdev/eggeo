@@ -20,7 +20,7 @@ export function SkyScene({
           <span className={`cloud cloud-${cloud}`} key={cloud} />
         ))}
       </div>
-      {showHill ? <div className="sky-scene-hill" aria-hidden="true" /> : null}
+      {showHill && <div className="sky-scene-hill" aria-hidden="true" />}
       {children}
     </main>
   );

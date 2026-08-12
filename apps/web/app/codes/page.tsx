@@ -1,6 +1,6 @@
 import { prisma } from '@eggeo/db';
 import { EggQrCard } from '@/components/EggQrCard';
-import { PrintButton } from '@/components/PrintButton';
+import { PrintAction } from '@/components/PrintAction';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyPage } from '@/components/SkyScene';
 
@@ -18,7 +18,7 @@ export default async function CodesPage() {
 
   return (
     <SkyPage>
-      <PrintButton />
+      <PrintAction />
       <section className="cards">
         {eggs.map((egg) => (
           <EggQrCard egg={egg} key={egg.id} />

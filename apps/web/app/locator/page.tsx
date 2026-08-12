@@ -7,7 +7,7 @@ export default async function LocatorPage() {
   const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY ?? process.env.NUXT_PUBLIC_MAPS_API_KEY ?? '';
 
   return (
-    <SkyScene className="locator-scene">
+    <SkyScene className="locator-scene" showHill={false}>
       <NearbyEggs mapsApiKey={mapsApiKey} />
     </SkyScene>
   );

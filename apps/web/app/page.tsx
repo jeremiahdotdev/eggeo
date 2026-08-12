@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
-import { BubbleDigits } from '@/components/BubbleText';
-import { EggIcon } from '@/components/EggIcon';
+import { appText } from '@eggeo/static-text';
+import { EggeoTitle } from '@eggeo/ui';
+import { AuthForm } from '@/components/AuthForm';
 import { SkyScene } from '@/components/SkyScene';
 import { getSession } from '@/lib/session';
 
@@ -12,16 +13,13 @@ export default async function HomePage() {
   }
 
   return (
-    <SkyScene className="home-hero" showHill={false} variant="home">
-      <section className="home-inner">
-        <div className="home-title-lock">
-          <BubbleDigits label="Eggeo" />
+    <SkyScene className="auth-scene" variant="auth">
+      <div className="auth-panel-wrap">
+        <div className="auth-title">
+          <EggeoTitle>{appText.brand.title}</EggeoTitle>
         </div>
-        <div className="home-egg">
-          <div className="home-hill" aria-hidden="true" />
-          <EggIcon seed="home-eggeo" size={360} showGrass />
-        </div>
-      </section>
+        <AuthForm />
+      </div>
     </SkyScene>
   );
 }

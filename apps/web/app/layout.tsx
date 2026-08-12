@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { EggIcon, EggeoText } from '@eggeo/ui';
 import './globals.css';
 import { getSession } from '@/lib/session';
-import { ColorText } from '@/components/ColorText';
-import { EggIcon } from '@/components/EggIcon';
 import { NavLinks } from '@/components/NavLinks';
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div className="nav-inner">
               <Link className="brand" href={session ? '/dashboard' : '/'}>
                 <EggIcon size={28} seed="header-eggeo" strokeWidth={8} />
-                <ColorText>Eggeo</ColorText>
+                <EggeoText colorized>Eggeo</EggeoText>
               </Link>
               <NavLinks isSignedIn={Boolean(session)} />
             </div>
@@ -30,7 +29,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
           <footer className="bottom-nav">
             <div className="nav-inner">
-              <NavLinks isSignedIn={Boolean(session)} compact />
+              <a className="footer-link" href="https://jeremiah.dev" rel="noreferrer" target="_blank">
+                <EggeoText colorized>jeremiah.dev</EggeoText>
+              </a>
             </div>
           </footer>
         </div>

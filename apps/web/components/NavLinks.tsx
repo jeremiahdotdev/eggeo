@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
 import { useState } from 'react';
-import { ColorText } from '@/components/ColorText';
+import { EggeoText } from '@eggeo/ui';
 
 const signedInLinks = [
   { href: '/leaderboard', label: 'Ranking' },
@@ -24,12 +24,16 @@ export function NavLinks({ isSignedIn, compact = false, setup = false }: { isSig
   const [isOpen, setIsOpen] = useState(false);
   const links = setup ? setupLinks : signedInLinks;
 
-  const navLinks = !isSignedIn ? [{ href: '/signin', label: 'Sign In' }] : links;
+  if (!isSignedIn) {
+    return null;
+  }
+
+  const navLinks = links;
   const nav = (
     <nav className={compact ? 'nav-links' : `nav-links nav-links-menu ${isOpen ? 'is-open' : ''}`} aria-label={compact ? 'Footer' : 'Primary'}>
       {navLinks.map((link) => (
         <Link className="nav-link" href={link.href} key={link.href} onClick={() => setIsOpen(false)}>
-          <ColorText>{link.label}</ColorText>
+          <EggeoText colorized>{link.label}</EggeoText>
         </Link>
       ))}
     </nav>
@@ -37,17 +41,6 @@ export function NavLinks({ isSignedIn, compact = false, setup = false }: { isSig
 
   if (compact) {
     return nav;
-  }
-
-  if (!isSignedIn) {
-    return (
-      <div className="nav-menu">
-        <button className="nav-toggle" aria-expanded={isOpen} aria-label="Open navigation" onClick={() => setIsOpen((value) => !value)} type="button">
-          <Menu aria-hidden="true" size={26} strokeWidth={3} />
-        </button>
-        {nav}
-      </div>
-    );
   }
 
   return (

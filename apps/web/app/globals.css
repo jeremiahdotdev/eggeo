@@ -9,6 +9,7 @@
   --border: #111;
   --grass: #00da34;
   --grass-dark: #00a528;
+  --font-comic: "Comic Sans MS", "Comic Sans", "Comic Neue", "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
 * {
@@ -26,7 +27,7 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--sky);
-  font-family: "Comic Sans MS", "Comic Sans", Arial, ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-comic);
 }
 
 a {
@@ -94,6 +95,13 @@ body:has(.home-hero) .app-shell {
   justify-content: center;
 }
 
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+}
+
 .nav-inner {
   width: min(1120px, 100%);
   min-height: 64px;
@@ -152,17 +160,31 @@ body:has(.home-hero) .app-shell {
 .color-text {
   display: inline-flex;
   align-items: baseline;
+  justify-content: center;
+  gap: 0.035em;
+  font-family: var(--font-comic);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-align: center;
   white-space: pre;
 }
 
-.color-text span {
+.color-text-letter {
+  display: inline-block;
+  font-family: var(--font-comic);
+  font-weight: 900;
   paint-order: stroke fill;
-  -webkit-text-stroke: 0.7px var(--border);
+  -webkit-text-stroke: 1.25px var(--border);
   text-shadow:
-    1px 0 0 var(--border),
-    -1px 0 0 var(--border),
-    0 1px 0 var(--border),
-    0 -1px 0 var(--border);
+    1.7px 0 0 var(--border),
+    -1.7px 0 0 var(--border),
+    0 1.7px 0 var(--border),
+    0 -1.7px 0 var(--border),
+    1.2px 1.2px 0 var(--border),
+    -1.2px 1.2px 0 var(--border),
+    1.2px -1.2px 0 var(--border),
+    -1.2px -1.2px 0 var(--border);
 }
 
 .page {
@@ -181,7 +203,7 @@ body:has(.home-hero) .app-shell {
   overflow: hidden;
 }
 
-.sky-scene > :not(.sky-clouds):not(.sky-scene-hill) {
+.sky-scene > :not(.sky-clouds):not(.sky-scene-hill):not(.auth-panel-wrap) {
   position: relative;
   z-index: 2;
 }
@@ -197,16 +219,17 @@ body:has(.home-hero) .app-shell {
 .sky-scene-hill {
   position: absolute;
   z-index: 1;
-  right: -16vw;
-  bottom: -320px;
-  left: -16vw;
-  height: 520px;
+  bottom: -880px;
+  left: 50%;
+  width: clamp(760px, 150vw, 1800px);
+  height: 1000px;
   background:
     radial-gradient(100% 90% at 50% 8%, rgb(255 255 255 / 0.18), transparent 42%),
     var(--grass);
-  border-top: 3px solid var(--border);
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border: 3px solid var(--border);
+  border-radius: 50%;
   box-shadow: inset 0 14px 0 rgb(255 255 255 / 0.16);
+  transform: translateX(-50%);
 }
 
 .auth-scene {
@@ -219,11 +242,24 @@ body:has(.home-hero) .app-shell {
 .auth-panel-wrap {
   position: relative;
   z-index: 3;
-  width: min(460px, 100%);
+  justify-self: center;
+  width: min(420px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.auth-title .color-text {
+.auth-panel-wrap > [data-component-config] {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.auth-title {
+  width: 100%;
+  display: flex;
   justify-content: center;
+  margin-bottom: 22px;
 }
 
 .page-title .color-text {
@@ -294,7 +330,7 @@ body:has(.home-hero) .app-shell {
   position: relative;
   z-index: 3;
   min-height: 100%;
-  width: min(520px, 100%);
+  width: min(760px, 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -400,16 +436,15 @@ body:has(.home-hero) .app-shell {
 .home-hill {
   position: absolute;
   z-index: 1;
-  top: calc(100% - 118px);
+  top: calc(100% - clamp(150px, 28%, 230px));
   left: 50%;
-  width: 132vw;
-  min-width: 560px;
-  height: 520px;
+  width: clamp(760px, 150vw, 1800px);
+  height: 1000px;
   background:
     radial-gradient(100% 90% at 50% 8%, rgb(255 255 255 / 0.18), transparent 42%),
     var(--grass);
-  border-top: 3px solid var(--border);
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border: 3px solid var(--border);
+  border-radius: 50%;
   box-shadow: inset 0 14px 0 rgb(255 255 255 / 0.16);
   transform: translateX(-50%);
 }
@@ -433,56 +468,29 @@ body:has(.home-hero) .app-shell {
   transform: translate(-50%, -50%);
 }
 
-.bubble-svg {
-  display: block;
-  overflow: visible;
-  font: bold 70px "Comic Sans MS", "Comic Sans", Arial, sans-serif;
-  letter-spacing: 0;
+.home-title-lock .color-text {
+  font-size: clamp(68px, 16vw, 150px) !important;
+  line-height: 1 !important;
 }
 
-.bubble-text {
-  stroke: black;
-  stroke-width: 2px;
-  stroke-linejoin: round;
-}
-
-.bubble-digits {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
-}
-
-.bubble-word {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bubble-letter {
-  width: clamp(48px, 13vw, 76px);
-  height: auto;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.bubble-letter-small {
-  width: clamp(28px, 7vw, 44px);
+@media (min-width: 900px) {
+  .home-title-lock {
+    width: min(860px, 92vw);
+  }
 }
 
 .home-egg {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(360px, 78vw);
+  width: clamp(330px, min(46vw, 58vh), 580px);
   margin-top: 12px;
 }
 
 .home-egg .egg-icon {
   position: relative;
   z-index: 2;
-  width: min(360px, 78vw);
+  width: clamp(330px, min(46vw, 58vh), 580px);
   height: auto;
 }
 
@@ -507,6 +515,9 @@ body:has(.home-hero) .app-shell {
 
 .score-bubble {
   position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
   width: min(180px, 42vw);
 }
 
@@ -565,17 +576,20 @@ body:has(.home-hero) .app-shell {
   flex-wrap: wrap;
 }
 
-.field {
+.field,
+.eggeo-field {
   display: grid;
   gap: 6px;
 }
 
-.field span {
+.field span,
+.eggeo-span {
   font-weight: 800;
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.eggeo-input {
   width: 100%;
   border: 2px solid var(--border);
   border-radius: 6px;
@@ -583,7 +597,8 @@ body:has(.home-hero) .app-shell {
   padding: 12px;
 }
 
-.field textarea {
+.field textarea,
+.eggeo-textarea {
   min-height: 110px;
   resize: vertical;
 }
@@ -633,14 +648,6 @@ body:has(.home-hero) .app-shell {
   .home-title-lock {
     top: 30%;
     width: min(330px, 92vw);
-  }
-
-  .bubble-letter {
-    width: clamp(46px, 15vw, 58px);
-  }
-
-  .bubble-letter-small {
-    width: clamp(28px, 8vw, 36px);
   }
 
   .home-egg {
@@ -706,6 +713,10 @@ body:has(.home-hero) .app-shell {
   .auth-scene {
     align-items: start;
     padding: 72px 16px 44px;
+  }
+
+  .auth-panel-wrap {
+    width: min(340px, calc(100vw - 32px));
   }
 
   .auth-clouds .cloud-one {
@@ -842,6 +853,14 @@ body:has(.home-hero) .app-shell {
   padding: 14px;
 }
 
+.qr-blurb {
+  max-width: 190px;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
 .scanner-frame {
   position: relative;
   width: min(520px, 100%);
@@ -913,21 +932,27 @@ body:has(.home-hero) .app-shell {
 
 .locator-scene {
   min-height: 100%;
+  background: #e5e7eb;
   overflow: hidden;
+  padding: 0;
+}
+
+.locator-scene .sky-clouds {
+  display: none;
 }
 
 .locator-map-shell {
   position: relative;
   z-index: 2;
   width: 100%;
-  height: 100%;
-  min-height: calc(100dvh - 132px);
+  height: calc(100dvh - 132px);
+  min-height: 420px;
 }
 
 .locator-map {
   width: 100%;
   height: 100%;
-  min-height: calc(100dvh - 132px);
+  min-height: 420px;
 }
 
 .locator-map-loading,
@@ -952,6 +977,8 @@ body:has(.home-hero) .app-shell {
 }
 
 .map-marker-egg .egg-icon {
+  width: 32px;
+  height: auto;
   filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.3));
 }
 
@@ -965,6 +992,17 @@ body:has(.home-hero) .app-shell {
   bottom: 18px;
   z-index: 4;
   width: min(340px, calc(100% - 36px));
+}
+
+.locator-map-status {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 4;
+  width: min(420px, calc(100% - 36px));
+  padding: 12px 14px;
+  text-align: center;
+  transform: translateX(-50%);
 }
 
 @media print {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { EggeoButton, EggeoField } from '@eggeo/ui';
 import { apiRequest } from '@/lib/clientApi';
 
 export function CreateEggForm() {
@@ -12,8 +13,7 @@ export function CreateEggForm() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function createEggs() {
     setIsSubmitting(true);
     setMessage('');
 
@@ -37,32 +37,22 @@ export function CreateEggForm() {
     }
   }
 
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void createEggs();
+  }
+
   return (
     <form className="panel stack" onSubmit={submit}>
-      <label className="field">
-        <span>Title</span>
-        <input required value={title} onChange={(event) => setTitle(event.target.value)} />
-      </label>
-      <label className="field">
-        <span>Description</span>
-        <textarea required value={description} onChange={(event) => setDescription(event.target.value)} />
-      </label>
-      <label className="field">
-        <span>Points per egg</span>
-        <input min={-100} required type="number" value={points} onChange={(event) => setPoints(event.target.valueAsNumber)} />
-      </label>
-      <label className="field">
-        <span>Color</span>
-        <input type="color" value={color} onChange={(event) => setColor(event.target.value)} />
-      </label>
-      <label className="field">
-        <span>Number of Eggs</span>
-        <input min={1} required type="number" value={count} onChange={(event) => setCount(event.target.valueAsNumber)} />
-      </label>
-      {message ? <p className="message">{message}</p> : null}
-      <button className="button" disabled={isSubmitting} type="submit">
+      <EggeoField label="Title" required value={title} onChangeText={setTitle} />
+      <EggeoField label="Description" multiline required value={description} onChangeText={setDescription} />
+      <EggeoField label="Points per egg" min={-100} required type="number" value={points} onChangeText={(value) => setPoints(Number(value))} />
+      <EggeoField label="Color" type="color" value={color} onChangeText={setColor} />
+      <EggeoField label="Number of Eggs" min={1} required type="number" value={count} onChangeText={(value) => setCount(Number(value))} />
+      {message && <p className="message">{message}</p>}
+      <EggeoButton disabled={isSubmitting} onPress={createEggs}>
         Submit
-      </button>
+      </EggeoButton>
     </form>
   );
 }

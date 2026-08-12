@@ -1,5 +1,5 @@
 import { prisma } from '@eggeo/db';
-import { PageTitle } from '@/components/PageTitle';
+import { EggeoText } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyPage } from '@/components/SkyScene';
 import { displayName } from '@/lib/egg';
@@ -33,7 +33,9 @@ export default async function LeaderboardPage() {
 
   return (
     <SkyPage>
-      <PageTitle>LEADERBOARD</PageTitle>
+      <EggeoText colorized variant="pageTitle">
+        LEADERBOARD
+      </EggeoText>
       <section className="stack">
         {users.map((user, index) => (
           <article className="leader-card row" key={user.name}>

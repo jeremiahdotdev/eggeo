@@ -1,4 +1,4 @@
-import { EggIcon } from '@/components/EggIcon';
+import { EggIcon } from '@eggeo/ui';
 
 export type EggView = {
   id?: string;

@@ -1,4 +1,5 @@
-import { PanelLink } from '@/components/PanelLink';
+import Link from 'next/link';
+import { EggeoButton } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyScene } from '@/components/SkyScene';
 
@@ -17,7 +18,9 @@ export default async function PanelPage() {
     <SkyScene className="hero">
       <section className="panel stack" style={{ width: 'min(380px, 100%)' }}>
         {links.map((link) => (
-          <PanelLink href={link.href} key={link.href} label={link.label} />
+          <Link href={link.href} key={link.href}>
+            <EggeoButton intent="secondary">{link.label}</EggeoButton>
+          </Link>
         ))}
       </section>
     </SkyScene>

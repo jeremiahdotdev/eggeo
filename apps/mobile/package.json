@@ -1,0 +1,31 @@
+{
+  "name": "@eggeo/mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@eggeo/api-client": "workspace:*",
+    "@eggeo/domain": "workspace:*",
+    "@eggeo/static-text": "workspace:*",
+    "@eggeo/types": "workspace:*",
+    "@eggeo/ui": "workspace:*",
+    "@eggeo/validation": "workspace:*",
+    "@expo-google-fonts/comic-neue": "^0.4.1",
+    "expo": "~57.0.12",
+    "expo-font": "^57.0.1",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit",
+    "web": "expo start --web"
+  },
+  "private": true
+}

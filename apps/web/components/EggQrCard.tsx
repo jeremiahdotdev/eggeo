@@ -2,6 +2,7 @@
 
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
+import { EggeoButton } from '@eggeo/ui';
 import { apiRequest } from '@/lib/clientApi';
 import { parseLinkFromEgg } from '@/lib/egg';
 
@@ -27,15 +28,20 @@ export function EggQrCard({ egg }: { egg: Egg }) {
 
   if (isDeleted) return null;
 
+  const eggLink = parseLinkFromEgg(egg.id);
+
   return (
     <article className="egg-card" style={{ backgroundColor: egg.color ?? '#fff' }}>
-      <h2>{egg.title || 'Untitled Egg'}</h2>
       <div className="qr-frame">
-        <QRCodeSVG value={parseLinkFromEgg(egg.id)} size={160} />
+        <QRCodeSVG value={eggLink} size={160} />
       </div>
-      <button className="button danger no-print" disabled={isDeleting} onClick={deleteEgg} type="button">
-        Delete
-      </button>
+      <h2>{egg.title || 'Untitled Egg'}</h2>
+      <p className="qr-blurb">{eggLink}</p>
+      <div className="no-print">
+        <EggeoButton disabled={isDeleting} intent="danger" onPress={deleteEgg}>
+          Delete
+        </EggeoButton>
+      </div>
     </article>
   );
 }

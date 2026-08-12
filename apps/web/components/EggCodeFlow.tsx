@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { EggIcon } from '@/components/EggIcon';
-import { PageTitle } from '@/components/PageTitle';
+import { EggIcon, EggeoButton, EggeoText } from '@eggeo/ui';
 import { QrScanner } from '@/components/QrScanner';
 import { apiRequest } from '@/lib/clientApi';
 import { isUuid, parseEggFromLink } from '@/lib/egg';
@@ -61,9 +60,11 @@ export function FindEggFlow() {
 
   return (
     <section className="stack">
-      <PageTitle>Find</PageTitle>
+      <EggeoText colorized variant="pageTitle">
+        Find
+      </EggeoText>
       <QrScanner disabled={isFinding || isCollecting} onDetect={performFind} />
-      {foundEgg ? (
+      {foundEgg && (
         <section className="panel stack">
           <div className="row">
             <div>
@@ -73,12 +74,12 @@ export function FindEggFlow() {
             </div>
             <EggIcon color={foundEgg.Egg.color} seed={foundEgg.Egg.title ?? 'found-egg'} />
           </div>
-          <button className="button" disabled={isCollecting || message === 'Egg Collected!'} onClick={collectEgg} type="button">
+          <EggeoButton disabled={isCollecting || message === 'Egg Collected!'} onPress={collectEgg}>
             Collect Egg Now
-          </button>
+          </EggeoButton>
         </section>
-      ) : null}
-      {message ? <p className="message">{message}</p> : null}
+      )}
+      {message && <p className="message">{message}</p>}
     </section>
   );
 }
@@ -130,9 +131,11 @@ export function HideEggFlow() {
 
   return (
     <section className="stack">
-      <PageTitle>Hide</PageTitle>
+      <EggeoText colorized variant="pageTitle">
+        Hide
+      </EggeoText>
       <QrScanner disabled={isSubmitting} onDetect={performHide} />
-      {message ? <p className="message">{message}</p> : null}
+      {message && <p className="message">{message}</p>}
     </section>
   );
 }

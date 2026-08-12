@@ -2,7 +2,7 @@
 
 import jsQR from 'jsqr';
 import { useEffect, useRef, useState } from 'react';
-import { QrCodeOutline } from '@/components/QrCodeOutline';
+import { QrCodeOutline } from '@eggeo/ui';
 import { isUuid, parseEggFromLink } from '@/lib/egg';
 
 export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; onDetect: (value: string) => void }) {

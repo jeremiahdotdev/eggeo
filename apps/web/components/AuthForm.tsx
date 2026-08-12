@@ -2,22 +2,20 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { appText } from '@eggeo/static-text';
+import { EggeoAuthPanel, type AuthPanelMode } from '@eggeo/ui';
 import { apiRequest } from '@/lib/clientApi';
-import { PageTitle } from '@/components/PageTitle';
-
-type Mode = 'login' | 'create';
 
 export function AuthForm() {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>('login');
+  const [mode, setMode] = useState<AuthPanelMode>('login');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function submit() {
     setIsSubmitting(true);
     setMessage('');
 
@@ -37,50 +35,28 @@ export function AuthForm() {
       router.push('/dashboard');
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Something went wrong.');
+      setMessage(error instanceof Error ? error.message : appText.auth.messages.genericError);
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <form className="panel stack" onSubmit={submit}>
-      <PageTitle>{mode === 'login' ? 'Log in' : 'Create account'}</PageTitle>
-      {mode === 'create' ? (
-        <label className="field">
-          <span>Name</span>
-          <input autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} />
-        </label>
-      ) : null}
-      <label className="field">
-        <span>Email</span>
-        <input autoComplete="email" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-      </label>
-      <label className="field">
-        <span>Password</span>
-        <input
-          autoComplete={mode === 'create' ? 'new-password' : 'current-password'}
-          minLength={8}
-          required
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </label>
-      {message ? <p className="message error">{message}</p> : null}
-      <button className="button" disabled={isSubmitting} type="submit">
-        {isSubmitting ? 'Working...' : mode === 'login' ? 'Log in' : 'Create account'}
-      </button>
-      <button
-        className="button ghost"
-        type="button"
-        onClick={() => {
-          setMode(mode === 'login' ? 'create' : 'login');
-          setMessage('');
-        }}
-      >
-        {mode === 'login' ? 'Need an account?' : 'Already have an account?'}
-      </button>
-    </form>
+    <EggeoAuthPanel
+      email={email}
+      isSubmitting={isSubmitting}
+      message={message}
+      mode={mode}
+      name={name}
+      onChangeEmail={setEmail}
+      onChangeMode={(nextMode) => {
+        setMode(nextMode);
+        setMessage('');
+      }}
+      onChangeName={setName}
+      onChangePassword={setPassword}
+      onSubmit={submit}
+      password={password}
+    />
   );
 }
