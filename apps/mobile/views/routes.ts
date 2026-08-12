@@ -1,6 +1,6 @@
-import { appText } from '@eggeo/static-text';
+import { appText } from '@eggeo/domain';
 
-export type MobilePage = 'codes' | 'create' | 'dashboard' | 'find' | 'hide' | 'leaderboard' | 'locator' | 'panel' | 'score';
+export type MobilePage = 'codes' | 'create' | 'dashboard' | 'events' | 'find' | 'hide' | 'leaderboard' | 'locator' | 'panel' | 'score';
 
 export const primaryPages: Array<{ key: MobilePage; label: string }> = [
   { key: 'dashboard', label: appText.nav.dashboard },
@@ -13,6 +13,7 @@ export const primaryPages: Array<{ key: MobilePage; label: string }> = [
 export const setupPages: Array<{ key: MobilePage; label: string }> = [
   { key: 'codes', label: appText.nav.codes },
   { key: 'create', label: appText.nav.create },
+  { key: 'events', label: appText.nav.events },
   { key: 'hide', label: appText.nav.hide },
   { key: 'score', label: appText.nav.score },
 ];

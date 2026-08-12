@@ -34,9 +34,19 @@ export type ApiEgg = {
   title?: string | null;
   description?: string | null;
   color?: string | null;
+  eventId?: string | null;
   points?: number | null;
   coords?: ApiEggLocation | null;
   isCollected?: boolean | null;
+};
+
+export type ApiEvent = {
+  id: string;
+  title: string;
+  description?: string | null;
+  username?: string | null;
+  eggCount?: number;
+  isOwner?: boolean;
 };
 
 export type ApiFoundEgg = {
@@ -47,7 +57,13 @@ export type CreateEggsInput = {
   color?: string;
   count: number;
   description: string;
+  eventId: string;
   points: number;
+  title: string;
+};
+
+export type CreateEventInput = {
+  description?: string;
   title: string;
 };
 
@@ -84,8 +100,38 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
     getMe() {
       return request<{ user: ApiSessionUser | null }>('/api/auth/me');
     },
-    getUserEggs() {
-      return request<ApiEgg[]>('/api/user-eggs');
+    getEvents() {
+      return request<ApiEvent[]>('/api/events');
+    },
+    createEvent(input: CreateEventInput) {
+      return request<ApiEvent>('/api/events', input);
+    },
+    deleteEvent(id: string) {
+      return request<{ deleted: boolean }>(`/api/events/${id}`, undefined, { method: 'DELETE' });
+    },
+    joinEvent(id: string) {
+      return request<ApiEvent>(`/api/events/${id}/join`, {});
+    },
+    getUserEggs(eventId?: string) {
+      const params = new URLSearchParams();
+
+      if (eventId) {
+        params.set('eventId', eventId);
+      }
+
+      return request<ApiEgg[]>(`/api/user-eggs${params.size ? `?${params}` : ''}`);
+    },
+    getNearbyEggs(coords: ApiEggLocation, eventId?: string) {
+      const params = new URLSearchParams({
+        lat: String(coords.lat),
+        lng: String(coords.lng),
+      });
+
+      if (eventId) {
+        params.set('eventId', eventId);
+      }
+
+      return request<ApiEgg[]>(`/api/eggs/nearby?${params}`);
     },
     getScore() {
       return request<ApiScore>('/api/score');

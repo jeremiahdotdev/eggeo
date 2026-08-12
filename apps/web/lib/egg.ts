@@ -9,9 +9,30 @@ export function parseEggFromLink(value: string) {
   return match?.[1] ?? trimmed;
 }
 
+export function parseEventFromLink(value: string) {
+  const trimmed = value.trim();
+  const match = trimmed.match(/\/event\/([0-9a-fA-F-]{36})/);
+  return match?.[1] ?? trimmed;
+}
+
 export function parseLinkFromEgg(id: string) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NUXT_PUBLIC_URL ?? 'http://localhost:3000';
   return `${baseUrl.replace(/\/$/, '')}/egg/${id}`;
+}
+
+export function parseLinkFromEvent(id: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NUXT_PUBLIC_URL ?? 'http://localhost:3000';
+  return `${baseUrl.replace(/\/$/, '')}/event/${id}`;
+}
+
+export function parseScanTarget(value: string) {
+  const trimmed = value.trim();
+  const eggMatch = trimmed.match(/\/egg\/([0-9a-fA-F-]{36})/);
+  const eventMatch = trimmed.match(/\/event\/([0-9a-fA-F-]{36})/);
+
+  if (eggMatch?.[1]) return { id: eggMatch[1], type: 'egg' as const };
+  if (eventMatch?.[1]) return { id: eventMatch[1], type: 'event' as const };
+  return { id: trimmed, type: 'egg' as const };
 }
 
 export function isUuid(value: string) {

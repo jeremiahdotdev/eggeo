@@ -1,0 +1,39 @@
+.actionMessage {
+  width: min(520px, 100%);
+  margin: 0 auto;
+  padding: 8px 10px;
+  font-weight: 900;
+  text-align: center;
+  background: rgb(255 255 255 / 0.86);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 5px 5px 0 rgb(0 0 0 / 0.14);
+}
+
+.buttonRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: var(--paper);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgb(0 0 0 / 0.16);
+}
+
+.row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stack {
+  display: grid;
+  gap: 14px;
+}

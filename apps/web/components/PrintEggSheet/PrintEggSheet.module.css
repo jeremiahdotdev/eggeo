@@ -1,0 +1,77 @@
+.sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  align-items: start;
+  width: 100%;
+}
+
+.sheet article {
+  print-color-adjust: exact;
+}
+
+.sheet svg {
+  width: 168px;
+  height: 168px;
+}
+
+.sheet form {
+  width: 100%;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  padding: 18px;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgb(0 0 0 / 0.16);
+}
+
+@page {
+  size: letter;
+  margin: 0.35in;
+}
+
+@media print {
+  .sheet {
+    grid-template-columns: repeat(3, 2.05in);
+    gap: 0.16in;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+  }
+
+  .sheet article {
+    width: 2.05in;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    align-content: start;
+    gap: 0.06in;
+    padding: 0.08in 0.08in 0.18in;
+    border-width: 2px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .sheet article h2 {
+    min-height: 0.24in;
+    font-size: 9pt;
+  }
+
+  .sheet article svg {
+    width: 1.18in;
+    height: 1.18in;
+  }
+
+  .sheet article form {
+    display: none;
+  }
+
+  .empty {
+    display: none;
+  }
+}

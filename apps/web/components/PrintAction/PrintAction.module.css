@@ -1,0 +1,16 @@
+.wrap {
+  display: flex;
+  justify-content: flex-end;
+  width: auto;
+}
+
+.wrap > button {
+  width: auto;
+  min-width: 132px;
+}
+
+@media print {
+  .wrap {
+    display: none !important;
+  }
+}

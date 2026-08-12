@@ -23,9 +23,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@eggeo/static-text": "workspace:*",
-    "@gluestack-style/react": "^1.0.57",
-    "@gluestack-ui/themed": "^1.1.73",
+    "@eggeo/domain": "workspace:*",
     "react-native-svg": "^15.15.5",
     "react-native-web": "^0.21.2"
   }

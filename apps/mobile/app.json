@@ -8,6 +8,10 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "Eggeo uses the camera to scan egg QR codes.",
+        "NSLocationWhenInUseUsageDescription": "Eggeo uses your location to hide eggs and show nearby eggs on the map."
+      },
       "supportsTablet": true
     },
     "android": {
@@ -17,10 +21,21 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Eggeo uses the camera to scan egg QR codes.",
+          "barcodeScannerEnabled": true,
+          "recordAudioAndroid": false
+        }
+      ]
+    ]
   }
 }

@@ -1,0 +1,17 @@
+.form {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: var(--paper);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgb(0 0 0 / 0.16);
+}
+
+.message {
+  margin: 0;
+  padding: 2px 0;
+  color: #166534;
+  font-weight: 900;
+  text-align: center;
+}

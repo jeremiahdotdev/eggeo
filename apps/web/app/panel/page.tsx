@@ -1,27 +1,29 @@
-import Link from 'next/link';
-import { EggeoButton } from '@eggeo/ui';
+import { appText } from '@eggeo/domain';
+import { EggeoActionPanel, EggeoText, type EggeoActionPanelItem } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyScene } from '@/components/SkyScene';
+import styles from './page.module.css';
 
-const links = [
-  { href: '/codes', label: 'Print' },
-  { href: '/create', label: 'Create' },
-  { href: '/hide', label: 'Hide' },
-  { href: '/score', label: 'Reset Score' },
-  { href: '/signout', label: 'Sign Out' },
+const links: EggeoActionPanelItem[] = [
+  { href: '/codes', key: 'codes', label: appText.nav.codes },
+  { href: '/create', key: 'create', label: appText.nav.create },
+  { href: '/events', key: 'events', label: appText.nav.events },
+  { href: '/hide', key: 'hide', label: appText.nav.hide },
+  { href: '/score', key: 'score', label: appText.nav.score },
+  { href: '/signout', intent: 'ghost', key: 'sign-out', label: appText.common.actions.signOut },
 ];
 
 export default async function PanelPage() {
-  await requirePageSession();
+  const session = await requirePageSession();
+  const displayName = session.name || session.email || session.username;
 
   return (
     <SkyScene className="hero">
-      <section className="panel stack" style={{ width: 'min(380px, 100%)' }}>
-        {links.map((link) => (
-          <Link href={link.href} key={link.href}>
-            <EggeoButton intent="secondary">{link.label}</EggeoButton>
-          </Link>
-        ))}
+      <section className={`stack ${styles.panelStack}`}>
+        <EggeoText className={styles.title} colorized variant="pageTitle">
+          {displayName}
+        </EggeoText>
+        <EggeoActionPanel items={links} />
       </section>
     </SkyScene>
   );

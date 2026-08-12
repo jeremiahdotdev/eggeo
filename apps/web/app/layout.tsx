@@ -1,14 +1,20 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { EggIcon, EggeoText } from '@eggeo/ui';
+import { appText } from '@eggeo/domain';
+import { EggeoNavBar, EggeoText, type EggeoNavItem } from '@eggeo/ui';
 import './globals.css';
 import { getSession } from '@/lib/session';
-import { NavLinks } from '@/components/NavLinks';
 
 export const metadata: Metadata = {
   title: 'Eggeo',
   description: 'A geolocation egg hunt app.',
 };
+
+const signedInLinks: EggeoNavItem[] = [
+  { href: '/leaderboard', key: 'leaderboard', label: appText.nav.leaderboard },
+  { href: '/find', key: 'find', label: appText.nav.find },
+  { href: '/locator', key: 'locator', label: appText.nav.locator },
+  { href: '/panel', key: 'panel', label: appText.nav.panel },
+];
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -18,13 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <div className="app-shell">
           <header className="top-nav">
-            <div className="nav-inner">
-              <Link className="brand" href={session ? '/dashboard' : '/'}>
-                <EggIcon size={28} seed="header-eggeo" strokeWidth={8} />
-                <EggeoText colorized>Eggeo</EggeoText>
-              </Link>
-              <NavLinks isSignedIn={Boolean(session)} />
-            </div>
+            <EggeoNavBar brandHref={session ? '/dashboard' : '/'} brandLabel={appText.brand.title} items={session ? signedInLinks : []} />
           </header>
           {children}
           <footer className="bottom-nav">

@@ -1,0 +1,31 @@
+.printControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.printControls select {
+  min-width: min(100%, 260px);
+}
+
+.deleteButton {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  background: #ef4444;
+  border: 2px solid #111;
+  border-radius: 6px;
+}
+
+@media print {
+  .printControls {
+    display: none !important;
+  }
+}

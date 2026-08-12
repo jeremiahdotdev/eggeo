@@ -8,6 +8,7 @@ const createEggSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),
   color: z.string().trim().optional(),
+  eventId: z.string().uuid(),
   points: z.coerce.number().int().default(1),
 });
 
@@ -27,11 +28,23 @@ export async function POST(request: Request) {
       return badRequest('MAX_EGGS_REACHED');
     }
 
+    const event = await prisma.event.findFirst({
+      where: {
+        id: input.eventId,
+        username: session.username,
+      },
+    });
+
+    if (!event) {
+      return badRequest('Invalid event.');
+    }
+
     for (let i = 0; i < input.count; i += 1) {
       await prisma.egg.create({
         data: {
           title: input.count === 1 ? input.title : `${input.title} #${i + 1}`,
           description: input.description,
+          eventId: input.eventId,
           username: session.username,
           color: input.color,
           points: input.points,

@@ -1,0 +1,40 @@
+.panel {
+  display: grid;
+  gap: 14px;
+  justify-items: stretch;
+  max-width: calc(100vw - 32px);
+  min-width: 0;
+  overflow: hidden;
+  width: min(440px, calc(100vw - 32px));
+  padding: 18px;
+  text-align: center;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgb(0 0 0 / 0.16);
+}
+
+.title,
+.message {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.message {
+  overflow: hidden;
+  text-align: center;
+}
+
+.titleText {
+  margin-bottom: 0 !important;
+  font-size: clamp(1.7rem, 6vw, 2.4rem) !important;
+  line-height: 1.12 !important;
+}
+
+.panel > button {
+  width: 100%;
+  min-width: 0;
+}

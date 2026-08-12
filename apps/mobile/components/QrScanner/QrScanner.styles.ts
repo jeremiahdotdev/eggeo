@@ -1,0 +1,71 @@
+import { eggeoColors } from '@eggeo/ui';
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  camera: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 1,
+  },
+  centerText: {
+    textAlign: 'center',
+  },
+  message: {
+    backgroundColor: '#ffffff',
+    borderColor: eggeoColors.border,
+    borderRadius: 6,
+    borderWidth: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.14,
+    shadowRadius: 0,
+  },
+  outline: {
+    bottom: 0,
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '100%',
+    zIndex: 2,
+  },
+  permissionPanel: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    flex: 1,
+    gap: 12,
+    justifyContent: 'center',
+    padding: 18,
+  },
+  permissionButton: {
+    alignSelf: 'center',
+    width: '100%',
+  },
+  shell: {
+    alignSelf: 'center',
+    aspectRatio: 1,
+    backgroundColor: '#ffffff',
+    borderColor: eggeoColors.border,
+    borderRadius: 8,
+    borderWidth: 3,
+    maxWidth: 420,
+    overflow: 'hidden',
+    position: 'relative',
+    width: '100%',
+    zIndex: 10,
+  },
+  stack: {
+    alignSelf: 'stretch',
+    elevation: 8,
+    gap: 10,
+    position: 'relative',
+    width: '100%',
+    zIndex: 20,
+  },
+});

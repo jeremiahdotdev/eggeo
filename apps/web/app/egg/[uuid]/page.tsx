@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@eggeo/db';
-import { EggCard } from '@/components/EggCard';
+import { EggCard } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyPage } from '@/components/SkyScene';
 

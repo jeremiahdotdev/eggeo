@@ -1,0 +1,7 @@
+.shell {
+  display: grid;
+  gap: 14px;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}

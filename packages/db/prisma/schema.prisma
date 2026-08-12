@@ -13,11 +13,33 @@ model Egg {
   description String?
   title       String?
   color       String?
+  eventId     String?
+  event       Event?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
   username    String?
   points      Int?      @default(1)
   createdBy   User?     @relation(fields: [username], references: [username])
   foundBy     UserEgg[]
   isCollected Boolean? @default(false)
+}
+
+model Event {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  username    String
+  createdBy   User        @relation(fields: [username], references: [username])
+  eggs        Egg[]
+  members     UserEvent[]
+  createdAt   DateTime    @default(now())
+}
+
+model UserEvent {
+  username String
+  eventId  String
+  Event    Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  User     User   @relation(fields: [username], references: [username])
+
+  @@id([username, eventId])
 }
 
 model UserEgg {
@@ -36,6 +58,8 @@ model User {
   name         String?
   foundEggs    UserEgg[]
   hiddenEggs   Egg[]
+  events       Event[]
+  joinedEvents UserEvent[]
 }
 
 model Location {

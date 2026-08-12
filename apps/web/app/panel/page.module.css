@@ -1,0 +1,10 @@
+.panelStack {
+  width: 100%;
+  max-width: 380px;
+}
+
+.title {
+  font-size: 64px !important;
+  line-height: 72px !important;
+  text-align: center;
+}
