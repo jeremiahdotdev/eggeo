@@ -3,6 +3,7 @@ import { appText } from '@eggeo/domain';
 import { EggIcon, EggeoText, ScoreBubble } from '@eggeo/ui';
 import { requirePageSession } from '@/components/RequireAuth';
 import { SkyScene } from '@/components/SkyScene';
+import { sumEggPoints } from '@/lib/egg';
 import styles from './page.module.css';
 
 export default async function DashboardPage() {
@@ -19,7 +20,7 @@ export default async function DashboardPage() {
       },
     },
   });
-  const points = foundEggs.map((entry) => entry.Egg.points ?? 1).reduce((a, b) => a + b, 0);
+  const points = sumEggPoints(foundEggs);
 
   return (
     <SkyScene className="home-hero" variant="home">

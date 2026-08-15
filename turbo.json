@@ -1,12 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["apps/web/.env.local", "packages/db/.env"],
+  "globalPassThroughEnv": ["AUTH_SECRET", "DATABASE_POSTGRES_PRISMA_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["EXPO_PUBLIC_APP_URL", "NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_MAPS_API_KEY", "NEXT_PUBLIC_MAX_EGGS_PER_USER"],
       "outputs": [".next/**", "dist/**"]
     },
     "dev": {
       "cache": false,
+      "env": ["EXPO_PUBLIC_APP_URL", "NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_MAPS_API_KEY", "NEXT_PUBLIC_MAX_EGGS_PER_USER"],
+      "passThroughEnv": ["AUTH_SECRET", "DATABASE_POSTGRES_PRISMA_URL"],
       "persistent": true
     },
     "lint": {},

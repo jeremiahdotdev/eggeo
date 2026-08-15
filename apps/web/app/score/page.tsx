@@ -2,6 +2,7 @@ import { prisma } from '@eggeo/db';
 import { requirePageSession } from '@/components/RequireAuth';
 import { ScoreReset } from '@/components/ScoreReset';
 import { SkyScene } from '@/components/SkyScene';
+import { sumEggPoints } from '@/lib/egg';
 
 export default async function ScorePage() {
   const session = await requirePageSession();
@@ -17,7 +18,7 @@ export default async function ScorePage() {
       },
     },
   });
-  const points = data.map((entry) => entry.Egg.points ?? 1).reduce((a, b) => a + b, 0);
+  const points = sumEggPoints(data);
 
   return (
     <SkyScene className="hero">

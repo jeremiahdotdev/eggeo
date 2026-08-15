@@ -8,6 +8,27 @@ const createEventSchema = z.object({
   description: z.string().trim().optional(),
 });
 
+type EventMembership = {
+  Event: {
+    _count: {
+      eggs: number;
+    };
+    description: string | null;
+    id: string;
+    title: string;
+    username: string;
+  };
+};
+
+type EventSummary = {
+  description: string | null;
+  eggCount: number;
+  id: string;
+  isOwner: boolean;
+  title: string;
+  username: string;
+};
+
 export async function GET() {
   try {
     const session = await requireSession();
@@ -30,7 +51,7 @@ export async function GET() {
 
     return ok(
       memberships
-        .map(({ Event }) => ({
+        .map(({ Event }: EventMembership): EventSummary => ({
           description: Event.description,
           eggCount: Event._count.eggs,
           id: Event.id,
@@ -38,7 +59,7 @@ export async function GET() {
           title: Event.title,
           username: Event.username,
         }))
-        .sort((a, b) => a.title.localeCompare(b.title)),
+        .sort((a: EventSummary, b: EventSummary) => a.title.localeCompare(b.title)),
     );
   } catch (error) {
     return apiError(error);

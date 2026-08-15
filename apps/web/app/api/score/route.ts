@@ -1,5 +1,6 @@
 import { prisma } from '@eggeo/db';
 import { apiError, ok } from '@/lib/api';
+import { sumEggPoints } from '@/lib/egg';
 import { requireSession } from '@/lib/session';
 
 export async function GET() {
@@ -18,7 +19,7 @@ export async function GET() {
       },
     });
 
-    return ok({ points: data.map((entry) => entry.Egg.points ?? 1).reduce((a, b) => a + b, 0) });
+    return ok({ points: sumEggPoints(data) });
   } catch (error) {
     return apiError(error);
   }

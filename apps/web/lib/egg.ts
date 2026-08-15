@@ -3,6 +3,16 @@ export type LocationInput = {
   lng: number;
 };
 
+export type EggPointsEntry = {
+  Egg: {
+    points?: number | null;
+  };
+};
+
+export function sumEggPoints(entries: EggPointsEntry[]) {
+  return entries.reduce((total, entry) => total + (entry.Egg.points ?? 1), 0);
+}
+
 export function parseEggFromLink(value: string) {
   const trimmed = value.trim();
   const match = trimmed.match(/\/egg\/([0-9a-fA-F-]{36})/);

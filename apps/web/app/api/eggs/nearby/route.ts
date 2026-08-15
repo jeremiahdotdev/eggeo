@@ -9,6 +9,13 @@ const nearbySchema = z.object({
   lng: z.coerce.number(),
 });
 
+type NearbyEgg = {
+  coords: {
+    lat: unknown;
+    lng: unknown;
+  } | null;
+};
+
 function distance(point: { lat: number; lng: number }, coords: { lat: unknown; lng: unknown } | null) {
   const lat = Number(coords?.lat);
   const lng = Number(coords?.lng);
@@ -59,7 +66,7 @@ export async function GET(request: Request) {
       },
     });
 
-    return ok(eggs.sort((a, b) => distance(center, a.coords) - distance(center, b.coords)));
+    return ok(eggs.sort((a: NearbyEgg, b: NearbyEgg) => distance(center, a.coords) - distance(center, b.coords)));
   } catch (error) {
     return apiError(error);
   }

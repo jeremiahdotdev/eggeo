@@ -11,6 +11,12 @@ import { parseLinkFromEgg } from '@/lib/egg';
 import { SkyPage } from '@/components/SkyScene';
 import styles from './page.module.css';
 
+type PrintableEgg = {
+  color: string | null;
+  id: string;
+  title: string | null;
+};
+
 export default async function CodesPage({ searchParams }: { searchParams: Promise<{ eventId?: string }> }) {
   const session = await requirePageSession();
   const { eventId = '' } = await searchParams;
@@ -34,7 +40,7 @@ export default async function CodesPage({ searchParams }: { searchParams: Promis
       title: true,
     },
   });
-  const eggs = selectedEvent
+  const eggs: PrintableEgg[] = selectedEvent
     ? await prisma.egg.findMany({
         where: {
           eventId: selectedEvent.id,
@@ -43,6 +49,11 @@ export default async function CodesPage({ searchParams }: { searchParams: Promis
         },
         orderBy: {
           title: 'asc',
+        },
+        select: {
+          color: true,
+          id: true,
+          title: true,
         },
       })
     : [];
@@ -54,7 +65,7 @@ export default async function CodesPage({ searchParams }: { searchParams: Promis
         <PrintAction disabled={!selectedEvent || eggs.length === 0} />
       </div>
       <PrintEggSheet emptyMessage={selectedEvent ? undefined : appText.eggs.messages.selectEventToPrint} isEmpty={eggs.length === 0}>
-        {eggs.map((egg) => {
+        {eggs.map((egg: PrintableEgg) => {
           async function deleteEgg() {
             'use server';
 

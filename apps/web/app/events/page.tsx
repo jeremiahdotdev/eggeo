@@ -9,21 +9,23 @@ import { requirePageSession } from '@/components/RequireAuth';
 import { SkyPage } from '@/components/SkyScene';
 import { parseLinkFromEvent } from '@/lib/egg';
 
+type OwnedEvent = {
+  id: string;
+  title: string;
+};
+
 export default async function EventsPage() {
   const session = await requirePageSession();
-  const events = await prisma.event.findMany({
+  const events: OwnedEvent[] = await prisma.event.findMany({
     where: {
       username: session.username,
     },
-    include: {
-      _count: {
-        select: {
-          eggs: true,
-        },
-      },
-    },
     orderBy: {
       title: 'asc',
+    },
+    select: {
+      id: true,
+      title: true,
     },
   });
 
@@ -34,7 +36,7 @@ export default async function EventsPage() {
       </EggeoText>
       <CreateEventForm />
       <PrintEggSheet isEmpty={events.length === 0}>
-        {events.map((event) => {
+        {events.map((event: OwnedEvent) => {
           async function deleteEvent() {
             'use server';
 
