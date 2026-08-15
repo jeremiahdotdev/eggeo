@@ -5,6 +5,11 @@ export const styles = StyleSheet.create({
   authHeader: {
     marginBottom: 22,
   },
+  authPanelWrap: {
+    alignSelf: 'stretch',
+    paddingHorizontal: 18,
+    zIndex: 2,
+  },
   fullPageContent: {
     alignSelf: 'stretch',
     elevation: 2,

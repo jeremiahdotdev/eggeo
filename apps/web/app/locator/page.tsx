@@ -19,7 +19,7 @@ export default async function LocatorPage({ searchParams }: { searchParams: Prom
       },
     },
   });
-  const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY ?? process.env.NUXT_PUBLIC_MAPS_API_KEY ?? '';
+  const mapsApiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY ?? '';
 
   return (
     <SkyScene className="locator-scene" showHill={false}>

@@ -16,12 +16,12 @@ export function parseEventFromLink(value: string) {
 }
 
 export function parseLinkFromEgg(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NUXT_PUBLIC_URL ?? 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
   return `${baseUrl.replace(/\/$/, '')}/egg/${id}`;
 }
 
 export function parseLinkFromEvent(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NUXT_PUBLIC_URL ?? 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
   return `${baseUrl.replace(/\/$/, '')}/event/${id}`;
 }
 

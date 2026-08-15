@@ -119,7 +119,7 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
         <EggeoText colorized variant="pageTitle">
           Map
         </EggeoText>
-        <p className={styles.message}>Add NEXT_PUBLIC_MAPS_API_KEY or NUXT_PUBLIC_MAPS_API_KEY to enable the map.</p>
+        <p className={styles.message}>Add NEXT_PUBLIC_MAPS_API_KEY to enable the map.</p>
       </section>
     );
   }

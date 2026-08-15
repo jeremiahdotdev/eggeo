@@ -139,22 +139,24 @@ export default function App() {
                 </ScrollView>
               )
             ) : (
-              <EggeoAuthPanel
-                email={authEmail}
-                isSubmitting={isAuthSubmitting}
-                message={authMessage}
-                mode={authMode}
-                name={authName}
-                onChangeEmail={setAuthEmail}
-                onChangeMode={(nextMode) => {
-                  setAuthMode(nextMode);
-                  setAuthMessage('');
-                }}
-                onChangeName={setAuthName}
-                onChangePassword={setAuthPassword}
-                onSubmit={submitAuth}
-                password={authPassword}
-              />
+              <View style={styles.authPanelWrap}>
+                <EggeoAuthPanel
+                  email={authEmail}
+                  isSubmitting={isAuthSubmitting}
+                  message={authMessage}
+                  mode={authMode}
+                  name={authName}
+                  onChangeEmail={setAuthEmail}
+                  onChangeMode={(nextMode) => {
+                    setAuthMode(nextMode);
+                    setAuthMessage('');
+                  }}
+                  onChangeName={setAuthName}
+                  onChangePassword={setAuthPassword}
+                  onSubmit={submitAuth}
+                  password={authPassword}
+                />
+              </View>
             )}
           </EggeoSkyScene>
         </KeyboardAvoidingView>

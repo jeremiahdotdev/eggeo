@@ -198,8 +198,10 @@ body:has(.home-hero) .app-shell {
   position: relative;
   z-index: 3;
   justify-self: center;
-  width: min(420px, calc(100vw - 32px));
-  max-width: calc(100vw - 32px);
+  width: min(444px, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -646,7 +648,7 @@ body:has(.home-hero) .app-shell {
   }
 
   .auth-panel-wrap {
-    width: min(340px, calc(100vw - 32px));
+    width: min(364px, 100%);
   }
 
   .auth-clouds .cloud-one {

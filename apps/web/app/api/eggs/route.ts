@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   try {
     const session = await requireSession();
     const input = createEggSchema.parse(await request.json());
-    const maxEggsPerUser = Number.parseInt(process.env.NEXT_PUBLIC_MAX_EGGS_PER_USER ?? process.env.NUXT_PUBLIC_MAX_EGGS_PER_USER ?? '200', 10);
+    const maxEggsPerUser = Number.parseInt(process.env.NEXT_PUBLIC_MAX_EGGS_PER_USER ?? '200', 10);
     const existingCount = await prisma.egg.count({
       where: {
         username: session.username,

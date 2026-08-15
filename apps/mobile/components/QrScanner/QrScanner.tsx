@@ -10,7 +10,6 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [cameraMessage, setCameraMessage] = useState('Point your camera at an egg QR code.');
   const [cameraKey, setCameraKey] = useState(0);
-  const cameraRef = useRef<CameraView | null>(null);
   const lastValueRef = useRef('');
   const lastScannedAtRef = useRef(0);
 
@@ -64,6 +63,7 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
   const canAskAgain = permission?.canAskAgain !== false;
   const hasPermission = permission?.granted === true;
   const permissionActionLabel = canAskAgain ? (hasPermission ? 'Retry Camera' : 'Allow Camera') : 'Open Settings';
+  const cameraActionLabel = cameraUnavailable ? 'Retry Camera' : permissionActionLabel;
   const permissionMessage =
     permissionError ||
     (permission
@@ -93,27 +93,15 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
             collapsable={false}
             facing="back"
             key={cameraKey}
-            ref={cameraRef}
             onBarcodeScanned={handleBarcodeScanned}
-            onAvailableLensesChanged={(event) => {
-              console.log('[QrScanner] available lenses changed', event);
-            }}
             onCameraReady={() => {
               console.log('[QrScanner] camera ready', { cameraKey });
-              cameraRef.current
-                ?.getAvailableLensesAsync()
-                .then((lenses) => {
-                  console.log('[QrScanner] available lenses after ready', lenses);
-                  setCameraUnavailable(lenses.length === 0);
-                  setCameraMessage(lenses.length > 0 ? 'Camera ready. Point it at an egg QR code.' : 'No camera available in this environment.');
-                })
-                .catch((error) => {
-                  console.log('[QrScanner] available lenses error', error);
-                  setCameraMessage('Camera ready. Point it at an egg QR code.');
-                });
+              setCameraUnavailable(false);
+              setCameraMessage('Camera ready. Point it at an egg QR code.');
             }}
             onMountError={(event) => {
               console.log('[QrScanner] camera mount error', event);
+              setCameraUnavailable(true);
               setCameraMessage(event.message || 'Unable to start the camera.');
             }}
             style={styles.camera}
@@ -126,19 +114,19 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
       <View style={styles.message}>
         <EggeoText style={styles.centerText}>{hasPermission ? cameraMessage : permissionMessage}</EggeoText>
       </View>
-      {!hasPermission && (
+      {(!hasPermission || cameraUnavailable) && (
         <EggeoButton
           onPress={() => {
             console.log('[QrScanner] permission button pressed', {
               canAskAgain,
               cameraUnavailable,
               hasPermission,
-              label: permissionActionLabel,
+              label: cameraActionLabel,
               permissionGranted: permission?.granted,
               permissionStatus: permission?.status,
             });
 
-            if (canAskAgain) {
+            if (cameraUnavailable || canAskAgain) {
               void handleRequestPermission();
               return;
             }
@@ -147,7 +135,7 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
           }}
           style={styles.permissionButton}
         >
-          {permissionActionLabel}
+          {cameraActionLabel}
         </EggeoButton>
       )}
     </View>
