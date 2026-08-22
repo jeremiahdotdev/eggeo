@@ -136,6 +136,7 @@ export const appText = {
     messages: {
       noScores: 'No scores yet.',
       reset: 'Score reset.',
+      selectEventForRanking: 'Select an event to view ranking.',
       signedInAs(name: string) {
         return `Signed in as ${name}.`;
       },

@@ -1,34 +1,32 @@
 import { prisma } from '@eggeo/db';
 import { apiError, ok } from '@/lib/api';
-import { displayName } from '@/lib/egg';
+import { getEventLeaderboard } from '@/lib/leaderboard';
 import { requireSession } from '@/lib/session';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    await requireSession();
-    const data = await prisma.userEgg.findMany({
-      select: {
-        User: true,
-        Egg: {
-          select: {
-            points: true,
-          },
+    const session = await requireSession();
+    const url = new URL(request.url);
+    const eventId = url.searchParams.get('eventId') || undefined;
+
+    if (!eventId) {
+      return ok([]);
+    }
+
+    const membership = await prisma.userEvent.findUnique({
+      where: {
+        username_eventId: {
+          eventId,
+          username: session.username,
         },
       },
     });
 
-    const grouped = new Map<string, { name: string; points: number }>();
-
-    for (const entry of data) {
-      const name = displayName(entry.User.name);
-      const existing = grouped.get(name);
-      grouped.set(name, {
-        name,
-        points: (existing?.points ?? 0) + (entry.Egg.points ?? 1),
-      });
+    if (!membership) {
+      return ok([]);
     }
 
-    return ok([...grouped.values()].sort((a, b) => b.points - a.points));
+    return ok(await getEventLeaderboard(eventId));
   } catch (error) {
     return apiError(error);
   }

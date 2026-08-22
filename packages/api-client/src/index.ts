@@ -94,8 +94,14 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
     createAccount(input: CreateAccountInput) {
       return request<ApiStatusResponse>('/api/auth/register', input);
     },
-    getLeaderboard() {
-      return request<ApiLeaderboardEntry[]>('/api/leaderboard');
+    getLeaderboard(eventId?: string) {
+      const params = new URLSearchParams();
+
+      if (eventId) {
+        params.set('eventId', eventId);
+      }
+
+      return request<ApiLeaderboardEntry[]>(`/api/leaderboard${params.size ? `?${params}` : ''}`);
     },
     getMe() {
       return request<{ user: ApiSessionUser | null }>('/api/auth/me');

@@ -1,7 +1,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { appText } from '@eggeo/domain';
 import { EggeoEventPicker } from '@eggeo/ui';
 
@@ -21,6 +21,7 @@ export function EventFilter({
   requireSelection?: boolean;
   webStyle?: CSSProperties;
 }) {
+  const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedEventId = searchParams.get('eventId') ?? '';
@@ -34,7 +35,7 @@ export function EventFilter({
       params.delete('eventId');
     }
 
-    router.push(`/codes${params.size ? `?${params}` : ''}`);
+    router.push(`${pathname}${params.size ? `?${params}` : ''}`);
   }
 
   return (

@@ -164,6 +164,9 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: 5.11.0
+        version: 5.11.0
       '@types/bcryptjs':
         specifier: 2.4.6
         version: 2.4.6
@@ -1347,6 +1350,9 @@ packages:
 
   '@prisma/get-platform@5.11.0':
     resolution: {integrity: sha512-rxtHpMLxNTHxqWuGOLzR2QOyQi79rK1u1XYAVLZxDGTLz/A+uoDnjz9veBFlicrpWjwuieM4N6jcnjj/DDoidw==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@5.11.0':
+    resolution: {integrity: sha512-9aTbG01unOPjJyAgR95NJKkzwocPap/u36AX9ZkLuNQKK31LKpsb7fnPbp/UzB7IgMtVMjnlNi4bJNvNbIhlhg==}
 
   '@react-aria/checkbox@3.17.1':
     resolution: {integrity: sha512-742B+UhH87TK02SYsFJZOgQ9VZpFEythH5LXRnwxt/xShoKOp+eqXPaVah79s/+B9sxY1mF0wNORQ2RVAQFSKw==}
@@ -5237,6 +5243,8 @@ snapshots:
   '@prisma/get-platform@5.11.0':
     dependencies:
       '@prisma/debug': 5.11.0
+
+  '@prisma/nextjs-monorepo-workaround-plugin@5.11.0': {}
 
   '@react-aria/checkbox@3.17.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
