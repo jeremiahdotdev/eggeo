@@ -9,7 +9,7 @@ import { QrScanner } from '../../components/QrScanner';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 import { styles } from './FindView.styles';
 
-export function FindView() {
+export function FindView({ showTitle = true }: { showTitle?: boolean }) {
   const [code, setCode] = useState('');
   const [foundEgg, setFoundEgg] = useState<ApiEgg | null>(null);
   const [message, setMessage] = useState('');
@@ -69,7 +69,7 @@ export function FindView() {
 
   return (
     <View style={viewStyles.stack}>
-      <ScreenTitle>{appText.nav.find}</ScreenTitle>
+      {showTitle && <ScreenTitle>{appText.nav.find}</ScreenTitle>}
       <QrScanner disabled={isBusy} onDetect={findEgg} />
       <ScreenMessage>{message}</ScreenMessage>
       {foundEgg && (

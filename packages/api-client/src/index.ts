@@ -71,15 +71,49 @@ function joinUrl(baseUrl: string, path: string) {
   return `${baseUrl.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+function getSetCookieHeaders(headers: Headers) {
+  const getSetCookie = (headers as Headers & { getSetCookie?: () => string[] }).getSetCookie?.();
+  if (getSetCookie?.length) return getSetCookie;
+
+  const setCookie = headers.get('set-cookie');
+  return setCookie ? [setCookie] : [];
+}
+
 export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions) {
+  let cookieHeader: string | undefined;
+
+  function storeSessionCookie(headers: Headers) {
+    for (const setCookie of getSetCookieHeaders(headers)) {
+      const cookie = setCookie.split(';', 1)[0];
+
+      if (!cookie || !cookie.startsWith('eggeo_session=')) {
+        continue;
+      }
+
+      cookieHeader = /;\s*max-age=0\b/i.test(setCookie) || cookie === 'eggeo_session=' ? undefined : cookie;
+    }
+  }
+
   async function request<T>(path: string, body?: unknown, init?: RequestInit): Promise<T> {
+    const headers = new Headers(init?.headers);
+
+    if (body && !headers.has('content-type')) {
+      headers.set('content-type', 'application/json');
+    }
+
+    if (cookieHeader && !headers.has('cookie')) {
+      headers.set('cookie', cookieHeader);
+    }
+
     const response = await fetchImpl(joinUrl(baseUrl, path), {
-      credentials: 'include',
-      method: body ? 'POST' : 'GET',
-      headers: body ? { 'content-type': 'application/json', ...init?.headers } : init?.headers,
-      body: body ? JSON.stringify(body) : undefined,
       ...init,
+      credentials: 'include',
+      method: init?.method ?? (body ? 'POST' : 'GET'),
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
     });
+
+    storeSessionCookie(response.headers);
 
     const payload = await response.json().catch(() => undefined);
 

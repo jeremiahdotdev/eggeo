@@ -11,6 +11,7 @@ export function DashboardView() {
   const { width } = useWindowDimensions();
   const eggSize = Math.min(Math.max(width * 1.26, 450), 560);
   const scoreSize = Math.max(84, eggSize * 0.24);
+  const scoreTop = eggSize * 0.64 - scoreSize / 2;
 
   useEffect(() => {
     api
@@ -28,7 +29,7 @@ export function DashboardView() {
         </View>
         <ScoreBubble
           size={scoreSize}
-          style={[styles.scoreBubble, { top: eggSize * 0.52 - 44 }]}
+          style={[styles.scoreBubble, { top: scoreTop }]}
           textStyle={{ fontSize: scoreSize * 0.58, lineHeight: scoreSize * 0.64 }}
         >
           {points === null ? appText.common.status.loading : String(points)}
