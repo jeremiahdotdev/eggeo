@@ -1,12 +1,14 @@
 import type { ApiEvent, ApiSessionUser } from '@eggeo/api-client';
 import { EGG_DEFAULT_POINTS, appText } from '@eggeo/domain';
 import { EggeoAuthPanel, EggeoNavBar, EggeoSkyScene, EggeoTitle, EggeoUIProvider, type AuthPanelMode } from '@eggeo/ui';
+import NetInfo from '@react-native-community/netinfo';
 import { ComicNeue_700Bold, useFonts } from '@expo-google-fonts/comic-neue';
 import { StatusBar } from 'expo-status-bar';
 import { Search, X } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View } from 'react-native';
 import { api } from '../lib/api';
+import { processOfflineEggQueue } from '../lib/offlineEggs';
 import { styles } from './App.styles';
 import { CodesView } from '../views/CodesView';
 import { CreateView } from '../views/CreateView';
@@ -37,6 +39,8 @@ export default function App() {
   const [events, setEvents] = useState<ApiEvent[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState('');
+  const [offlineSyncRevision, setOfflineSyncRevision] = useState(0);
+  const isSyncingOfflineQueue = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,7 +74,7 @@ export default function App() {
     }
   }, [page]);
 
-  async function loadEvents(preferredEventId?: string) {
+  const loadEvents = useCallback(async (preferredEventId?: string) => {
     if (!user) {
       setEvents([]);
       setSelectedEventId('');
@@ -91,7 +95,26 @@ export default function App() {
     } finally {
       setIsLoadingEvents(false);
     }
-  }
+  }, [user]);
+
+  const syncOfflineEggQueue = useCallback(async () => {
+    if (!user || isSyncingOfflineQueue.current) {
+      return;
+    }
+
+    isSyncingOfflineQueue.current = true;
+
+    try {
+      const result = await processOfflineEggQueue();
+
+      if (result.completed > 0 || result.failed > 0) {
+        setOfflineSyncRevision((revision) => revision + 1);
+        await loadEvents();
+      }
+    } finally {
+      isSyncingOfflineQueue.current = false;
+    }
+  }, [loadEvents, user]);
 
   useEffect(() => {
     if (!user) {
@@ -101,7 +124,20 @@ export default function App() {
     }
 
     void loadEvents();
-  }, [user]);
+    void syncOfflineEggQueue();
+  }, [loadEvents, syncOfflineEggQueue, user]);
+
+  useEffect(() => {
+    if (!user) {
+      return undefined;
+    }
+
+    return NetInfo.addEventListener((state) => {
+      if (state.isConnected === true && state.isInternetReachable !== false) {
+        void syncOfflineEggQueue();
+      }
+    });
+  }, [syncOfflineEggQueue, user]);
 
   if (!fontsLoaded || isCheckingSession) {
     return null;
@@ -114,16 +150,16 @@ export default function App() {
   function renderPage() {
     return (
       <>
-        {page === 'dashboard' && <DashboardView events={events} selectedEventId={selectedEventId} onSelectEvent={setSelectedEventId} />}
-        {page === 'leaderboard' && <LeaderboardView selectedEventId={selectedEventId} />}
+        {page === 'dashboard' && <DashboardView events={events} offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} onSelectEvent={setSelectedEventId} />}
+        {page === 'leaderboard' && <LeaderboardView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
         {page === 'events' && <EventsView events={events} isLoading={isLoadingEvents} onEventsChanged={loadEvents} onSelectEvent={setSelectedEventId} />}
         {page === 'find' && <FindView onEventsChanged={loadEvents} />}
-        {page === 'locator' && <LocatorView selectedEventId={selectedEventId} />}
+        {page === 'locator' && <LocatorView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
         {page === 'panel' && user && <PanelView onNavigate={navigate} onSignedOut={() => setUser(null)} user={user} />}
         {page === 'codes' && <CodesView events={events} selectedEventId={selectedEventId} />}
         {page === 'create' && <CreateView events={events} selectedEventId={selectedEventId} />}
         {page === 'hide' && <HideView />}
-        {page === 'score' && <ScoreView selectedEventId={selectedEventId} />}
+        {page === 'score' && <ScoreView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
       </>
     );
   }

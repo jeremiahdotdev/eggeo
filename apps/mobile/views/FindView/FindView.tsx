@@ -5,9 +5,13 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { api } from '../../lib/api';
 import { getEggCode, isUuid, parseScanTarget } from '../../lib/egg';
+import { enqueueOfflineEggAction, isOfflineError } from '../../lib/offlineEggs';
 import { QrScanner } from '../../components/QrScanner';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 import { styles } from './FindView.styles';
+
+const offlineFindMessage = "Saved offline. We'll confirm this egg when you're back online.";
+const offlineCollectMessage = "Saved offline. We'll collect this egg when you're back online.";
 
 export function FindView({
   showTitle = true,
@@ -45,6 +49,13 @@ export function FindView({
       const response = await api.findEgg(id);
       setFoundEgg(response.Egg);
     } catch (error) {
+      if (target.type === 'egg' && (await isOfflineError(error))) {
+        await enqueueOfflineEggAction('findEgg', id);
+        setFoundEgg(null);
+        setMessage(offlineFindMessage);
+        return;
+      }
+
       setMessage(error instanceof Error ? error.message : appText.eggs.messages.unableToFind);
     } finally {
       setIsBusy(false);
@@ -60,6 +71,12 @@ export function FindView({
       await api.collectEgg(id);
       setMessage(appText.eggs.messages.collected);
     } catch (error) {
+      if (await isOfflineError(error)) {
+        await enqueueOfflineEggAction('collectEgg', id);
+        setMessage(offlineCollectMessage);
+        return;
+      }
+
       setMessage(error instanceof Error ? error.message : appText.eggs.messages.unableToCollect);
     } finally {
       setIsBusy(false);
@@ -72,7 +89,7 @@ export function FindView({
     setMessage('');
   }
 
-  const wasCollected = message === appText.eggs.messages.collected;
+  const wasCollected = message === appText.eggs.messages.collected || message === offlineCollectMessage;
 
   return (
     <View style={viewStyles.stack}>

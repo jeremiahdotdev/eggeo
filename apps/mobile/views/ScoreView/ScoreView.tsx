@@ -6,8 +6,10 @@ import { api } from '../../lib/api';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 
 export function ScoreView({
+  offlineSyncRevision = 0,
   selectedEventId,
 }: {
+  offlineSyncRevision?: number;
   selectedEventId: string;
 }) {
   const [points, setPoints] = useState<number | null>(null);
@@ -25,7 +27,7 @@ export function ScoreView({
       .getScore(eventId)
       .then((score) => setPoints(score.points))
       .catch(() => setPoints(0));
-  }, [eventId]);
+  }, [eventId, offlineSyncRevision]);
 
   useEffect(loadScore, [loadScore]);
 

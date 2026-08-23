@@ -8,8 +8,10 @@ import { styles } from './LeaderboardView.styles';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 
 export function LeaderboardView({
+  offlineSyncRevision = 0,
   selectedEventId,
 }: {
+  offlineSyncRevision?: number;
   selectedEventId: string;
 }) {
   const [entries, setEntries] = useState<ApiLeaderboardEntry[]>([]);
@@ -30,7 +32,7 @@ export function LeaderboardView({
       .then(setEntries)
       .catch((error) => setMessage(error instanceof Error ? error.message : appText.score.messages.unableToLoadRanking))
       .finally(() => setIsLoading(false));
-  }, [eventId]);
+  }, [eventId, offlineSyncRevision]);
 
   useEffect(load, [load]);
 

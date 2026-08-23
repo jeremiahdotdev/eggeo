@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
 import { api } from '../../lib/api';
+import { getCachedNearbyEggs, setCachedNearbyEggs } from '../../lib/offlineEggs';
 import { styles } from './LocatorView.styles';
 import { ScreenTitle, viewStyles } from '../shared';
 
@@ -25,8 +26,10 @@ function parseCoords(coords: ApiEggLocation | null | undefined) {
 }
 
 export function LocatorView({
+  offlineSyncRevision = 0,
   selectedEventId,
 }: {
+  offlineSyncRevision?: number;
   selectedEventId: string;
 }) {
   const mapRef = useRef<MapView | null>(null);
@@ -44,9 +47,15 @@ export function LocatorView({
 
     try {
       const nearby = await api.getNearbyEggs({ lat: coords.latitude, lng: coords.longitude }, nextEventId);
-      setEggs(nearby.filter((egg) => parseCoords(egg.coords)));
+      const visibleEggs = nearby.filter((egg) => parseCoords(egg.coords));
+      setEggs(visibleEggs);
+      setMessage('');
+      await setCachedNearbyEggs(nextEventId, visibleEggs);
     } catch (error) {
       console.error(error);
+      const cachedEggs = (await getCachedNearbyEggs(nextEventId)).filter((egg) => parseCoords(egg.coords));
+      setEggs(cachedEggs);
+      setMessage(cachedEggs.length > 0 ? 'Showing saved egg locations.' : appText.eggs.messages.unableToLoadEggs);
     }
   }, [eventId]);
 
@@ -54,11 +63,34 @@ export function LocatorView({
     if (region) {
       void loadNearby(region);
     }
-  }, [eventId, loadNearby, region]);
+  }, [eventId, loadNearby, offlineSyncRevision, region]);
 
   useEffect(() => {
     setSelectedEgg(null);
   }, [eventId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCachedEggs() {
+      if (!eventId) {
+        setEggs([]);
+        return;
+      }
+
+      const cachedEggs = (await getCachedNearbyEggs(eventId)).filter((egg) => parseCoords(egg.coords));
+
+      if (isMounted && cachedEggs.length > 0) {
+        setEggs(cachedEggs);
+      }
+    }
+
+    void loadCachedEggs();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [eventId, offlineSyncRevision]);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | undefined;

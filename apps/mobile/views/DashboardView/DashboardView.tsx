@@ -9,10 +9,12 @@ import { ScreenTitle, viewStyles } from '../shared';
 
 export function DashboardView({
   events,
+  offlineSyncRevision = 0,
   selectedEventId,
   onSelectEvent,
 }: {
   events: ApiEvent[];
+  offlineSyncRevision?: number;
   selectedEventId: string;
   onSelectEvent: (eventId: string) => void;
 }) {
@@ -29,7 +31,7 @@ export function DashboardView({
       .getScore(selectedEventId || undefined)
       .then((score) => setPoints(score.points))
       .catch(() => setPoints(0));
-  }, [selectedEventId]);
+  }, [offlineSyncRevision, selectedEventId]);
 
   return (
     <View style={[viewStyles.stack, styles.dashboard]}>
