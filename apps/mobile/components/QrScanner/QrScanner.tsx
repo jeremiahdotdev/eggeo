@@ -72,17 +72,6 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
         : 'Camera access is blocked. Enable it in Settings to scan egg codes.'
       : 'Requesting camera permission...');
 
-  useEffect(() => {
-    console.log('[QrScanner] permission button visible', {
-      canAskAgain,
-      cameraUnavailable,
-      hasPermission,
-      label: permissionActionLabel,
-      permissionGranted: permission?.granted,
-      permissionStatus: permission?.status,
-    });
-  }, [cameraUnavailable, canAskAgain, hasPermission, permission?.granted, permission?.status, permissionActionLabel]);
-
   return (
     <View style={styles.stack}>
       <View collapsable={false} style={styles.shell}>
@@ -95,12 +84,10 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
             key={cameraKey}
             onBarcodeScanned={handleBarcodeScanned}
             onCameraReady={() => {
-              console.log('[QrScanner] camera ready', { cameraKey });
               setCameraUnavailable(false);
               setCameraMessage('Camera ready. Point it at an egg QR code.');
             }}
             onMountError={(event) => {
-              console.log('[QrScanner] camera mount error', event);
               setCameraUnavailable(true);
               setCameraMessage(event.message || 'Unable to start the camera.');
             }}
@@ -117,15 +104,6 @@ export function QrScanner({ disabled = false, onDetect }: { disabled?: boolean; 
       {(!hasPermission || cameraUnavailable) && (
         <EggeoButton
           onPress={() => {
-            console.log('[QrScanner] permission button pressed', {
-              canAskAgain,
-              cameraUnavailable,
-              hasPermission,
-              label: cameraActionLabel,
-              permissionGranted: permission?.granted,
-              permissionStatus: permission?.status,
-            });
-
             if (cameraUnavailable || canAskAgain) {
               void handleRequestPermission();
               return;
