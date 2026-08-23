@@ -30,6 +30,10 @@ type EventOption = {
 
 const defaultCenter = { lat: 0, lng: 0 };
 
+function getSelectedEventId(events: EventOption[], eventId: string) {
+  return events.some((event) => event.id === eventId) ? eventId : events[0]?.id ?? '';
+}
+
 function parseCoords(coords: NearbyEgg['coords']): Location | null {
   const lat = Number(coords?.lat);
   const lng = Number(coords?.lng);
@@ -45,7 +49,7 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
   const mapRef = useRef<google.maps.Map | null>(null);
   const [center, setCenter] = useState<Location>(defaultCenter);
   const [eggs, setEggs] = useState<NearbyEgg[]>([]);
-  const [eventId, setEventId] = useState(initialEventId);
+  const [eventId, setEventId] = useState(() => getSelectedEventId(events, initialEventId));
   const [locationMessage, setLocationMessage] = useState('Finding your location...');
   const [selectedEgg, setSelectedEgg] = useState<NearbyEgg | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
@@ -66,15 +70,17 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
   );
 
   const loadNearby = useCallback(async (position: Location, nextEventId = eventId) => {
+    if (!nextEventId) {
+      setEggs([]);
+      return;
+    }
+
     try {
       const params = new URLSearchParams({
         lat: String(position.lat),
         lng: String(position.lng),
+        eventId: nextEventId,
       });
-
-      if (nextEventId) {
-        params.set('eventId', nextEventId);
-      }
 
       const nearby = await apiRequest<NearbyEgg[]>(`/api/eggs/nearby?${params}`);
       setEggs(nearby.filter((egg) => parseCoords(egg.coords)));
@@ -150,7 +156,6 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
             }}
             value={eventId}
           >
-            <option value="">All Eggs</option>
             {events.map((event) => (
               <option key={event.id} value={event.id}>
                 {event.title}

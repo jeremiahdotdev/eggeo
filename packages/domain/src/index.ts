@@ -137,6 +137,7 @@ export const appText = {
       noScores: 'No scores yet.',
       reset: 'Score reset.',
       selectEventForRanking: 'Select an event to view ranking.',
+      selectEventForScore: 'Select an event to view or reset score.',
       signedInAs(name: string) {
         return `Signed in as ${name}.`;
       },

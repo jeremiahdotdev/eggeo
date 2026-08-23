@@ -139,8 +139,14 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
 
       return request<ApiEgg[]>(`/api/eggs/nearby?${params}`);
     },
-    getScore() {
-      return request<ApiScore>('/api/score');
+    getScore(eventId?: string) {
+      const params = new URLSearchParams();
+
+      if (eventId) {
+        params.set('eventId', eventId);
+      }
+
+      return request<ApiScore>(`/api/score${params.size ? `?${params}` : ''}`);
     },
     createEggs(input: CreateEggsInput) {
       return request<{ created: number }>('/api/eggs', input);
@@ -163,8 +169,10 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
     logout() {
       return request<ApiStatusResponse>('/api/auth/logout', undefined, { method: 'POST' });
     },
-    resetScore() {
-      return request<ApiScore>('/api/score', undefined, { method: 'DELETE' });
+    resetScore(eventId: string) {
+      const params = new URLSearchParams({ eventId });
+
+      return request<ApiScore>(`/api/score?${params}`, undefined, { method: 'DELETE' });
     },
     request,
   };

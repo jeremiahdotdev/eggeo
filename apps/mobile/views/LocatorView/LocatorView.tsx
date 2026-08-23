@@ -33,8 +33,13 @@ export function LocatorView() {
   const [selectedEgg, setSelectedEgg] = useState<ApiEgg | null>(null);
 
   const loadNearby = useCallback(async (coords: { latitude: number; longitude: number }, nextEventId = eventId) => {
+    if (!nextEventId) {
+      setEggs([]);
+      return;
+    }
+
     try {
-      const nearby = await api.getNearbyEggs({ lat: coords.latitude, lng: coords.longitude }, nextEventId || undefined);
+      const nearby = await api.getNearbyEggs({ lat: coords.latitude, lng: coords.longitude }, nextEventId);
       setEggs(nearby.filter((egg) => parseCoords(egg.coords)));
     } catch (error) {
       console.error(error);
@@ -42,7 +47,16 @@ export function LocatorView() {
   }, [eventId]);
 
   useEffect(() => {
-    api.getEvents().then(setEvents).catch(() => setEvents([]));
+    api
+      .getEvents()
+      .then((nextEvents) => {
+        setEvents(nextEvents);
+        setEventId((currentEventId) => currentEventId || nextEvents[0]?.id || '');
+      })
+      .catch(() => {
+        setEvents([]);
+        setEventId('');
+      });
   }, []);
 
   useEffect(() => {
@@ -132,9 +146,6 @@ export function LocatorView() {
       {events.length > 0 && (
         <View style={styles.eventBar}>
           <ScrollView contentContainerStyle={styles.eventBarContent} horizontal showsHorizontalScrollIndicator={false}>
-            <EggeoButton intent={!eventId ? undefined : 'ghost'} onPress={() => setEventId('')}>
-              {appText.events.labels.allEggs}
-            </EggeoButton>
             {events.map((event) => (
               <EggeoButton intent={eventId === event.id ? undefined : 'ghost'} key={event.id} onPress={() => setEventId(event.id)}>
                 {event.title}
