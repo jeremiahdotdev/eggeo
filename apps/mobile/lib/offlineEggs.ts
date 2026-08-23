@@ -88,6 +88,15 @@ export async function getOfflineEggQueue() {
   return parseJson<OfflineEggAction[]>(await AsyncStorage.getItem(QUEUE_KEY), []);
 }
 
+export async function clearOfflineEggStorage() {
+  const keys = await AsyncStorage.getAllKeys();
+  const eggeoKeys = keys.filter((key) => key === QUEUE_KEY || key.startsWith(CACHE_KEY_PREFIX));
+
+  if (eggeoKeys.length > 0) {
+    await AsyncStorage.multiRemove(eggeoKeys);
+  }
+}
+
 async function setOfflineEggQueue(queue: OfflineEggAction[]) {
   await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
 }

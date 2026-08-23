@@ -1,0 +1,16 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "info": {
+      "en-US": {
+        "title": "Eggeo",
+        "subtitle": "A real-world egg hunt",
+        "description": "Eggeo lets friends create event-based egg hunts, hide eggs with location, scan QR codes, and compete on a shared leaderboard.",
+        "keywords": ["egg hunt", "events", "qr", "map", "game"],
+        "marketingUrl": "https://eggs.jeremiah.dev",
+        "supportUrl": "https://eggs.jeremiah.dev/support",
+        "privacyPolicyUrl": "https://eggs.jeremiah.dev/privacy"
+      }
+    }
+  }
+}

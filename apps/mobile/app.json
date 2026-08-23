@@ -3,16 +3,20 @@
     "name": "Eggeo",
     "slug": "eggeo-mobile",
     "version": "1.0.0",
+    "description": "A real-world egg hunt app for events, QR codes, maps, and leaderboards.",
     "orientation": "portrait",
     "scheme": "eggeo",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
+      "buildNumber": "1",
+      "bundleIdentifier": "dev.jeremiah.eggeo",
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSCameraUsageDescription": "Eggeo uses the camera to scan egg QR codes.",
         "NSLocationWhenInUseUsageDescription": "Eggeo uses your location to hide eggs and show nearby eggs on the map."
       },
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +30,7 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
+      "package": "dev.jeremiah.eggeo",
       "predictiveBackGestureEnabled": false
     },
     "web": {

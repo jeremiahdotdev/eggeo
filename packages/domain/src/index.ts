@@ -18,9 +18,13 @@ export const appText = {
       password: 'Password',
     },
     messages: {
+      accountDeleted: 'Account deleted.',
+      deleteAccountBody: 'This permanently removes your account, events, eggs, and scores. This cannot be undone.',
+      deleteAccountTitle: 'Delete account?',
       genericError: 'Something went wrong.',
       requestFailed: 'Request failed.',
       signedIn: 'Signed in.',
+      unableToDeleteAccount: 'Unable to delete account.',
       readyToHunt(points: number) {
         return `Ready to hunt. Default eggs are worth ${points} point.`;
       },
@@ -31,8 +35,10 @@ export const appText = {
   },
   common: {
     actions: {
+      cancel: 'Cancel',
       close: 'Close',
       delete: 'Delete',
+      deleteAccount: 'Delete Account',
       signOut: 'Sign out',
       submit: 'Submit',
     },

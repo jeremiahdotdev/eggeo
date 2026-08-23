@@ -203,6 +203,9 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
     logout() {
       return request<ApiStatusResponse>('/api/auth/logout', undefined, { method: 'POST' });
     },
+    deleteAccount() {
+      return request<ApiStatusResponse>('/api/auth/account', undefined, { method: 'DELETE' });
+    },
     resetScore(eventId: string) {
       const params = new URLSearchParams({ eventId });
 
