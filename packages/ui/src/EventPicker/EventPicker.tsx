@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from 'react';
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react-native';
 import { Modal, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { appText } from '@eggeo/domain';
 import type { EggeoStyle } from '../types';
@@ -95,9 +96,7 @@ export function EggeoEventPicker({
         <Text numberOfLines={1} style={styles.nativeSelectText}>
           {selectedEvent?.title ?? allLabel}
         </Text>
-        <Text aria-hidden style={styles.nativeChevron}>
-          v
-        </Text>
+        <ChevronDown color="#111111" size={22} strokeWidth={3} />
       </Pressable>
       <Modal animationType="fade" onRequestClose={() => setIsOpen(false)} transparent visible={isOpen}>
         <Pressable onPress={() => setIsOpen(false)} style={styles.nativeOverlay}>

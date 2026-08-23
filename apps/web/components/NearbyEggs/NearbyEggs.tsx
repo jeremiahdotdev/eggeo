@@ -2,7 +2,9 @@
 
 import { GoogleMap, OverlayView, useJsApiLoader } from '@react-google-maps/api';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { EggIcon, EggeoButton, EggeoText, UserMarker } from '@eggeo/ui';
+import { appText } from '@eggeo/domain';
+import { EggIcon, EggeoEventPicker, EggeoText, UserMarker } from '@eggeo/ui';
+import { useEventSelection } from '@/components/EventSelection';
 import { apiRequest } from '@/lib/clientApi';
 import styles from './NearbyEggs.module.css';
 
@@ -23,16 +25,7 @@ type NearbyEgg = {
   } | null;
 };
 
-type EventOption = {
-  id: string;
-  title: string;
-};
-
 const defaultCenter = { lat: 0, lng: 0 };
-
-function getSelectedEventId(events: EventOption[], eventId: string) {
-  return events.some((event) => event.id === eventId) ? eventId : events[0]?.id ?? '';
-}
 
 function parseCoords(coords: NearbyEgg['coords']): Location | null {
   const lat = Number(coords?.lat);
@@ -45,11 +38,11 @@ function parseCoords(coords: NearbyEgg['coords']): Location | null {
   return { lat, lng };
 }
 
-export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { events?: EventOption[]; initialEventId?: string; mapsApiKey: string }) {
+export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
+  const { events, selectedEventId, setSelectedEventId } = useEventSelection();
   const mapRef = useRef<google.maps.Map | null>(null);
   const [center, setCenter] = useState<Location>(defaultCenter);
   const [eggs, setEggs] = useState<NearbyEgg[]>([]);
-  const [eventId, setEventId] = useState(() => getSelectedEventId(events, initialEventId));
   const [locationMessage, setLocationMessage] = useState('Finding your location...');
   const [selectedEgg, setSelectedEgg] = useState<NearbyEgg | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
@@ -69,7 +62,7 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
     [],
   );
 
-  const loadNearby = useCallback(async (position: Location, nextEventId = eventId) => {
+  const loadNearby = useCallback(async (position: Location, nextEventId = selectedEventId) => {
     if (!nextEventId) {
       setEggs([]);
       return;
@@ -87,7 +80,7 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
     } catch (error) {
       console.error(error);
     }
-  }, [eventId]);
+  }, [selectedEventId]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -145,23 +138,18 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
     <section className={styles.shell}>
       {events.length > 0 && (
         <div className={styles.eventBar}>
-          <select
-            aria-label="Event"
-            className={styles.eventSelect}
-            onChange={(event) => {
-              const nextEventId = event.target.value;
-              setEventId(nextEventId);
+          <EggeoEventPicker
+            allLabel={appText.events.labels.selectEvent}
+            events={events}
+            requireSelection
+            selectedEventId={selectedEventId}
+            webStyle={{ margin: 0, width: '100%' }}
+            onSelect={(nextEventId) => {
+              setSelectedEventId(nextEventId);
               setSelectedEgg(null);
               void loadNearby(center, nextEventId);
             }}
-            value={eventId}
-          >
-            {events.map((event) => (
-              <option key={event.id} value={event.id}>
-                {event.title}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       )}
       {!isLoaded ? (
@@ -205,9 +193,9 @@ export function NearbyEggs({ events = [], initialEventId = '', mapsApiKey }: { e
         <aside className={styles.popover}>
           <div className={styles.row}>
             <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
-            <EggeoButton intent="ghost" onPress={() => setSelectedEgg(null)}>
-              Close
-            </EggeoButton>
+            <button aria-label="Close" className={styles.closeButton} onClick={() => setSelectedEgg(null)} type="button">
+              <span aria-hidden="true">X</span>
+            </button>
           </div>
           <strong>{selectedEgg.title || 'Hidden egg'}</strong>
           {selectedEgg.description && <p>{selectedEgg.description}</p>}

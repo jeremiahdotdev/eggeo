@@ -1,16 +1,18 @@
-import type { ApiEvent } from '@eggeo/api-client';
 import { appText } from '@eggeo/domain';
-import { EggeoButton, EggeoEventPicker, EggeoPanel, EggeoText } from '@eggeo/ui';
+import { EggeoButton, EggeoPanel, EggeoText } from '@eggeo/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { api } from '../../lib/api';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 
-export function ScoreView() {
-  const [events, setEvents] = useState<ApiEvent[]>([]);
-  const [eventId, setEventId] = useState('');
+export function ScoreView({
+  selectedEventId,
+}: {
+  selectedEventId: string;
+}) {
   const [points, setPoints] = useState<number | null>(null);
   const [message, setMessage] = useState('');
+  const eventId = selectedEventId;
 
   const loadScore = useCallback(() => {
     if (!eventId) {
@@ -27,10 +29,6 @@ export function ScoreView() {
 
   useEffect(loadScore, [loadScore]);
 
-  useEffect(() => {
-    api.getEvents().then(setEvents).catch(() => setEvents([]));
-  }, []);
-
   async function reset() {
     if (!eventId) {
       setMessage(appText.score.messages.selectEventForScore);
@@ -45,16 +43,6 @@ export function ScoreView() {
   return (
     <View style={viewStyles.stack}>
       <ScreenTitle>{appText.nav.score}</ScreenTitle>
-      <EggeoEventPicker
-        allLabel={appText.events.labels.selectEvent}
-        events={events}
-        requireSelection
-        selectedEventId={eventId}
-        onSelect={(nextEventId) => {
-          setEventId(nextEventId);
-          setMessage('');
-        }}
-      />
       <EggeoPanel>
         <EggeoText colorized style={viewStyles.panelTitle}>
           {points === null ? appText.common.status.loading : String(points)}

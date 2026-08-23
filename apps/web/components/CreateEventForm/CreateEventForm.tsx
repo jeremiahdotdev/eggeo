@@ -1,14 +1,17 @@
 'use client';
 
+import type { ApiEvent } from '@eggeo/api-client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { appText } from '@eggeo/domain';
 import { EggeoButton, EggeoField } from '@eggeo/ui';
+import { useEventSelection } from '@/components/EventSelection';
 import { apiRequest } from '@/lib/clientApi';
 import styles from './CreateEventForm.module.css';
 
 export function CreateEventForm() {
   const router = useRouter();
+  const { refreshEvents } = useEventSelection();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
@@ -19,13 +22,14 @@ export function CreateEventForm() {
     setMessage('');
 
     try {
-      await apiRequest('/api/events', {
+      const event = await apiRequest<ApiEvent>('/api/events', {
         description,
         title,
       });
       setTitle('');
       setDescription('');
       setMessage(appText.events.messages.created);
+      await refreshEvents(event.id);
       router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : appText.events.messages.unableToCreate);

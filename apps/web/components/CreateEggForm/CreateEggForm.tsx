@@ -3,23 +3,20 @@
 import { useState } from 'react';
 import { appText } from '@eggeo/domain';
 import { EggeoButton, EggeoEventPicker, EggeoField } from '@eggeo/ui';
+import { useEventSelection } from '@/components/EventSelection';
 import { apiRequest } from '@/lib/clientApi';
 import styles from './CreateEggForm.module.css';
 
-type EventOption = {
-  id: string;
-  title: string;
-};
-
-export function CreateEggForm({ events = [] }: { events?: EventOption[] }) {
+export function CreateEggForm() {
+  const { events, refreshEvents, selectedOwnerEvent, setSelectedEventId } = useEventSelection();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [points, setPoints] = useState(1);
   const [color, setColor] = useState('#ffffff');
   const [count, setCount] = useState(1);
-  const [eventId, setEventId] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const eventId = selectedOwnerEvent?.id ?? '';
   const canSubmit = Boolean(eventId) && !isSubmitting;
 
   async function createEggs() {
@@ -44,6 +41,7 @@ export function CreateEggForm({ events = [] }: { events?: EventOption[] }) {
       setPoints(1);
       setCount(1);
       setMessage(`Created ${response.created} ${response.created === 1 ? 'egg' : 'eggs'}.`);
+      await refreshEvents(eventId);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to create eggs.');
     } finally {
@@ -63,7 +61,15 @@ export function CreateEggForm({ events = [] }: { events?: EventOption[] }) {
       <EggeoField label="Points per egg" min={-100} required type="number" value={points} onChangeText={(value) => setPoints(Number(value))} />
       <EggeoField label="Color" type="color" value={color} onChangeText={setColor} />
       <EggeoField label="Number of Eggs" min={1} required type="number" value={count} onChangeText={(value) => setCount(Number(value))} />
-      <EggeoEventPicker allLabel={appText.events.labels.selectEvent} events={events} label="Event" requireSelection selectedEventId={eventId} onSelect={setEventId} />
+      <EggeoEventPicker
+        allLabel={appText.events.labels.selectEvent}
+        events={events}
+        label="Event"
+        ownerOnly
+        requireSelection
+        selectedEventId={eventId}
+        onSelect={setSelectedEventId}
+      />
       {message && <p className={styles.message}>{message}</p>}
       <EggeoButton disabled={!canSubmit} onPress={createEggs}>
         Submit

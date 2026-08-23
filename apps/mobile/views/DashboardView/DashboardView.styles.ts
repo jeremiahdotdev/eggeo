@@ -25,6 +25,13 @@ export const styles = StyleSheet.create({
     top: -40,
     zIndex: 3,
   },
+  eventPicker: {
+    alignSelf: 'stretch',
+    marginTop: 6,
+    paddingHorizontal: 18,
+    width: '100%',
+    zIndex: 5,
+  },
   scoreBubble: {
     position: 'absolute',
     zIndex: 4,

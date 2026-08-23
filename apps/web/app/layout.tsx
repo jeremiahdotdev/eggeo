@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { appText } from '@eggeo/domain';
 import { EggeoNavBar, EggeoText, type EggeoNavItem } from '@eggeo/ui';
+import { EventSelectionProvider } from '@/components/EventSelection';
+import { getEventsForUser } from '@/lib/events';
 import './globals.css';
 import { getSession } from '@/lib/session';
 
@@ -18,6 +20,7 @@ const signedInLinks: EggeoNavItem[] = [
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
+  const initialEvents = session ? await getEventsForUser(session.username) : [];
 
   return (
     <html lang="en">
@@ -26,7 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <header className="top-nav">
             <EggeoNavBar brandHref={session ? '/dashboard' : '/'} brandLabel={appText.brand.title} items={session ? signedInLinks : []} />
           </header>
-          {children}
+          <EventSelectionProvider initialEvents={initialEvents}>{children}</EventSelectionProvider>
           <footer className="bottom-nav">
             <div className="nav-inner">
               <a className="footer-link" href="https://jeremiah.dev" rel="noreferrer" target="_blank">

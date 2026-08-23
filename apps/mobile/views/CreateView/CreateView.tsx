@@ -1,29 +1,30 @@
 import type { ApiEvent } from '@eggeo/api-client';
 import { appText } from '@eggeo/domain';
-import { EggeoButton, EggeoEventPicker, EggeoField, EggeoPanel } from '@eggeo/ui';
-import { useEffect, useState } from 'react';
+import { EggeoButton, EggeoField, EggeoPanel } from '@eggeo/ui';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { api } from '../../lib/api';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 
-export function CreateView() {
+export function CreateView({
+  events,
+  selectedEventId,
+}: {
+  events: ApiEvent[];
+  selectedEventId: string;
+}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [points, setPoints] = useState('1');
   const [color, setColor] = useState('#ffffff');
   const [count, setCount] = useState('1');
-  const [events, setEvents] = useState<ApiEvent[]>([]);
-  const [eventId, setEventId] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const canSubmit = Boolean(eventId) && !isSubmitting;
-
-  useEffect(() => {
-    api.getEvents().then(setEvents).catch(() => setEvents([]));
-  }, []);
+  const ownerEventId = events.some((event) => event.id === selectedEventId && event.isOwner) ? selectedEventId : '';
+  const canSubmit = Boolean(ownerEventId) && !isSubmitting;
 
   async function submit() {
-    if (!eventId) {
+    if (!ownerEventId) {
       return;
     }
 
@@ -35,7 +36,7 @@ export function CreateView() {
         color,
         count: Number(count),
         description,
-        eventId,
+        eventId: ownerEventId,
         points: Number(points),
         title,
       });
@@ -60,7 +61,6 @@ export function CreateView() {
         <EggeoField keyboardType="default" label={appText.eggs.fields.points} onChangeText={setPoints} required type="number" value={points} />
         <EggeoField label={appText.eggs.fields.color} onChangeText={setColor} type="color" value={color} />
         <EggeoField keyboardType="default" label={appText.eggs.fields.count} onChangeText={setCount} required type="number" value={count} />
-        <EggeoEventPicker allLabel={appText.events.labels.selectEvent} events={events} ownerOnly requireSelection selectedEventId={eventId} onSelect={setEventId} />
         <ScreenMessage>{message}</ScreenMessage>
         <EggeoButton disabled={!canSubmit} isLoading={isSubmitting} onPress={submit}>
           {appText.common.actions.submit}

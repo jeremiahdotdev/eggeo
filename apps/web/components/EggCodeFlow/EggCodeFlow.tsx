@@ -1,8 +1,10 @@
 'use client';
 
+import type { ApiEvent } from '@eggeo/api-client';
 import { useState } from 'react';
 import { appText } from '@eggeo/domain';
 import { EggIcon, EggeoButton, EggeoText } from '@eggeo/ui';
+import { useEventSelection } from '@/components/EventSelection';
 import { QrScanner } from '@/components/QrScanner';
 import { apiRequest } from '@/lib/clientApi';
 import { isUuid, parseEggFromLink, parseScanTarget } from '@/lib/egg';
@@ -18,6 +20,7 @@ type FoundEgg = {
 };
 
 export function FindEggFlow() {
+  const { refreshEvents } = useEventSelection();
   const [input, setInput] = useState('');
   const [foundEgg, setFoundEgg] = useState<FoundEgg>();
   const [message, setMessage] = useState('');
@@ -38,9 +41,10 @@ export function FindEggFlow() {
     setIsFinding(true);
     try {
       if (target.type === 'event') {
-        const event = await apiRequest<{ title: string }>(`/api/events/${id}/join`, {});
+        const event = await apiRequest<ApiEvent>(`/api/events/${id}/join`, {});
         setFoundEgg(undefined);
         setMessage(appText.events.messages.joined(event.title));
+        await refreshEvents(event.id);
         return;
       }
 

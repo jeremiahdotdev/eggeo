@@ -1,14 +1,13 @@
-import type { ApiEgg, ApiEggLocation, ApiEvent } from '@eggeo/api-client';
+import type { ApiEgg, ApiEggLocation } from '@eggeo/api-client';
 import { appText } from '@eggeo/domain';
-import { EggIcon, EggeoButton, EggeoEventPicker, EggeoPanel, EggeoText } from '@eggeo/ui';
+import { EggIcon, EggeoPanel, EggeoText } from '@eggeo/ui';
 import * as Location from 'expo-location';
+import { X } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Modal, Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
-import Svg, { Circle, Path } from 'react-native-svg';
 import { api } from '../../lib/api';
 import { styles } from './LocatorView.styles';
-import { FindView } from '../FindView';
 import { ScreenTitle, viewStyles } from '../shared';
 
 const latitudeDelta = 0.006;
@@ -25,15 +24,17 @@ function parseCoords(coords: ApiEggLocation | null | undefined) {
   return { latitude: lat, longitude: lng };
 }
 
-export function LocatorView() {
+export function LocatorView({
+  selectedEventId,
+}: {
+  selectedEventId: string;
+}) {
   const mapRef = useRef<MapView | null>(null);
   const [region, setRegion] = useState<Region | null>(null);
   const [eggs, setEggs] = useState<ApiEgg[]>([]);
-  const [events, setEvents] = useState<ApiEvent[]>([]);
-  const [eventId, setEventId] = useState('');
-  const [isFindModalOpen, setIsFindModalOpen] = useState(false);
   const [message, setMessage] = useState('Finding your location...');
   const [selectedEgg, setSelectedEgg] = useState<ApiEgg | null>(null);
+  const eventId = selectedEventId;
 
   const loadNearby = useCallback(async (coords: { latitude: number; longitude: number }, nextEventId = eventId) => {
     if (!nextEventId) {
@@ -50,23 +51,14 @@ export function LocatorView() {
   }, [eventId]);
 
   useEffect(() => {
-    api
-      .getEvents()
-      .then((nextEvents) => {
-        setEvents(nextEvents);
-        setEventId((currentEventId) => currentEventId || nextEvents[0]?.id || '');
-      })
-      .catch(() => {
-        setEvents([]);
-        setEventId('');
-      });
-  }, []);
-
-  useEffect(() => {
     if (region) {
       void loadNearby(region);
     }
   }, [eventId, loadNearby, region]);
+
+  useEffect(() => {
+    setSelectedEgg(null);
+  }, [eventId]);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | undefined;
@@ -127,9 +119,7 @@ export function LocatorView() {
 
             return (
               <Marker key={egg.id} coordinate={coords} onPress={() => setSelectedEgg(egg)}>
-                <View style={styles.eggMarker}>
-                  <EggIcon color={egg.color} seed={egg.id} size={32} strokeWidth={5} />
-                </View>
+                <EggIcon color={egg.color} seed={egg.id} size={36} strokeWidth={5} />
               </Marker>
             );
           })}
@@ -139,70 +129,34 @@ export function LocatorView() {
           <ScreenTitle>{appText.nav.locator}</ScreenTitle>
         </View>
       )}
-      {message && (
-        <View style={styles.status}>
-          <EggeoPanel>
-            <EggeoText style={viewStyles.centerText}>{message}</EggeoText>
-          </EggeoPanel>
-        </View>
-      )}
-      {events.length > 0 && (
-        <View style={styles.eventBar}>
-          <EggeoEventPicker
-            allLabel={appText.events.labels.selectEvent}
-            events={events}
-            requireSelection
-            selectedEventId={eventId}
-            style={styles.eventPicker}
-            onSelect={(nextEventId) => {
-              setEventId(nextEventId);
-              setSelectedEgg(null);
-            }}
-          />
-        </View>
-      )}
-      <Pressable accessibilityLabel="Open QR finder" accessibilityRole="button" onPress={() => setIsFindModalOpen(true)} style={styles.findButton}>
-        <Svg fill="none" height={30} stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} viewBox="0 0 30 30" width={30}>
-          <Circle cx={13} cy={13} r={8} />
-          <Path d="M19 19 25 25" />
-        </Svg>
-      </Pressable>
-      {selectedEgg && (
-        <View style={styles.popover}>
-          <EggeoPanel style={styles.popoverPanel}>
-            <ScrollView contentContainerStyle={styles.popoverContent} showsVerticalScrollIndicator={false}>
-              <View style={viewStyles.row}>
-                <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
-                <EggeoButton intent="ghost" onPress={() => setSelectedEgg(null)}>
-                  {appText.common.actions.close}
-                </EggeoButton>
-              </View>
-              <EggeoText colorized style={viewStyles.cardTitle}>
-                {selectedEgg.title || appText.eggs.labels.untitled}
-              </EggeoText>
-              {selectedEgg.description && <EggeoText style={viewStyles.centerText}>{selectedEgg.description}</EggeoText>}
-              <EggeoText style={viewStyles.centerText}>{appText.eggs.points(selectedEgg.points)}</EggeoText>
-            </ScrollView>
-          </EggeoPanel>
-        </View>
-      )}
-      <Modal animationType="slide" onRequestClose={() => setIsFindModalOpen(false)} transparent visible={isFindModalOpen}>
-        <Pressable onPress={() => setIsFindModalOpen(false)} style={styles.findModalOverlay}>
-          <Pressable onPress={(event) => event.stopPropagation()} style={styles.findModalPanel}>
-            <View style={styles.findModalHeader}>
-              <EggeoText colorized style={styles.findModalTitle}>
-                {appText.nav.find}
-              </EggeoText>
-              <EggeoButton intent="ghost" onPress={() => setIsFindModalOpen(false)}>
-                {appText.common.actions.close}
-              </EggeoButton>
-            </View>
-            <ScrollView contentContainerStyle={styles.findModalContent} showsVerticalScrollIndicator={false}>
-              <FindView showTitle={false} />
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
+      <View pointerEvents="box-none" style={styles.overlayLayer}>
+        {message && (
+          <View style={styles.status}>
+            <EggeoPanel>
+              <EggeoText style={viewStyles.centerText}>{message}</EggeoText>
+            </EggeoPanel>
+          </View>
+        )}
+        {selectedEgg && (
+          <View style={styles.popover}>
+            <EggeoPanel style={styles.popoverPanel}>
+              <ScrollView contentContainerStyle={styles.popoverContent} showsVerticalScrollIndicator={false}>
+                <View style={viewStyles.row}>
+                  <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
+                  <Pressable accessibilityLabel={appText.common.actions.close} accessibilityRole="button" onPress={() => setSelectedEgg(null)} style={styles.closeButton}>
+                    <X color="#111111" size={28} strokeWidth={3} />
+                  </Pressable>
+                </View>
+                <EggeoText colorized style={viewStyles.cardTitle}>
+                  {selectedEgg.title || appText.eggs.labels.untitled}
+                </EggeoText>
+                {selectedEgg.description && <EggeoText style={viewStyles.centerText}>{selectedEgg.description}</EggeoText>}
+                <EggeoText style={viewStyles.centerText}>{appText.eggs.points(selectedEgg.points)}</EggeoText>
+              </ScrollView>
+            </EggeoPanel>
+          </View>
+        )}
+      </View>
     </View>
   );
 }

@@ -9,7 +9,13 @@ import { QrScanner } from '../../components/QrScanner';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 import { styles } from './FindView.styles';
 
-export function FindView({ showTitle = true }: { showTitle?: boolean }) {
+export function FindView({
+  showTitle = true,
+  onEventsChanged,
+}: {
+  showTitle?: boolean;
+  onEventsChanged?: (preferredEventId?: string) => Promise<void> | void;
+}) {
   const [code, setCode] = useState('');
   const [foundEgg, setFoundEgg] = useState<ApiEgg | null>(null);
   const [message, setMessage] = useState('');
@@ -32,6 +38,7 @@ export function FindView({ showTitle = true }: { showTitle?: boolean }) {
         const event = await api.joinEvent(id);
         setFoundEgg(null);
         setMessage(appText.events.messages.joined(event.title));
+        await onEventsChanged?.(event.id);
         return;
       }
 

@@ -10,11 +10,6 @@ export const styles = StyleSheet.create({
     color: eggeoColors.ink,
     fontWeight: '900',
   },
-  nativeChevron: {
-    color: eggeoColors.ink,
-    fontSize: 18,
-    fontWeight: '900',
-  },
   nativeMenu: {
     alignSelf: 'stretch',
     backgroundColor: eggeoColors.paper,

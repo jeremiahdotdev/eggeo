@@ -1,41 +1,39 @@
 import type { ApiEvent } from '@eggeo/api-client';
 import { appText } from '@eggeo/domain';
 import { EggeoButton, EggeoEventQrCard, EggeoField, EggeoPanel, EggeoText, eggeoColors } from '@eggeo/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { api } from '../../lib/api';
 import { parseLinkFromEvent } from '../../lib/egg';
 import { ScreenMessage, ScreenQrCode, ScreenTitle, viewStyles } from '../shared';
 
-export function EventsView() {
-  const [events, setEvents] = useState<ApiEvent[]>([]);
+export function EventsView({
+  events,
+  isLoading,
+  onEventsChanged,
+  onSelectEvent,
+}: {
+  events: ApiEvent[];
+  isLoading: boolean;
+  onEventsChanged: (preferredEventId?: string) => Promise<void> | void;
+  onSelectEvent: (eventId: string) => void;
+}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
-
-  const load = useCallback(() => {
-    setIsLoading(true);
-    api
-      .getEvents()
-      .then(setEvents)
-      .catch((error) => setMessage(error instanceof Error ? error.message : appText.events.messages.unableToLoad))
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  useEffect(load, [load]);
 
   async function createEvent() {
     setIsSubmitting(true);
     setMessage('');
 
     try {
-      await api.createEvent({ description, title });
+      const event = await api.createEvent({ description, title });
       setTitle('');
       setDescription('');
       setMessage(appText.events.messages.created);
-      load();
+      onSelectEvent(event.id);
+      await onEventsChanged(event.id);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : appText.events.messages.unableToCreate);
     } finally {
@@ -48,7 +46,7 @@ export function EventsView() {
     try {
       await api.deleteEvent(id);
       setMessage(appText.events.messages.deleted);
-      load();
+      await onEventsChanged();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : appText.events.messages.unableToDelete);
     }
