@@ -23,10 +23,11 @@ export function ScoreView({
     }
 
     setPoints(null);
+    setMessage('');
     api
       .getScore(eventId)
       .then((score) => setPoints(score.points))
-      .catch(() => setPoints(0));
+      .catch(error => setMessage(error instanceof Error ? error.message : 'Score unavailable.'));
   }, [eventId, offlineSyncRevision]);
 
   useEffect(loadScore, [loadScore]);
@@ -37,9 +38,13 @@ export function ScoreView({
       return;
     }
 
-    const score = await api.resetScore(eventId);
-    setPoints(score.points);
-    setMessage(appText.score.messages.reset);
+    try {
+      const score = await api.resetScore(eventId);
+      setPoints(score.points);
+      setMessage(appText.score.messages.reset);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to reset score.');
+    }
   }
 
   return (
@@ -47,7 +52,7 @@ export function ScoreView({
       <ScreenTitle>{appText.nav.score}</ScreenTitle>
       <EggeoPanel>
         <EggeoText colorized style={viewStyles.panelTitle}>
-          {points === null ? appText.common.status.loading : String(points)}
+          {points === null ? (message ? '—' : appText.common.status.loading) : String(points)}
         </EggeoText>
         <ScreenMessage>{message || (!eventId ? appText.score.messages.selectEventForScore : '')}</ScreenMessage>
         <EggeoButton disabled={!eventId || points === null} intent="danger" onPress={reset}>

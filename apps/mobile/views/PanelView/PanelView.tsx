@@ -2,8 +2,8 @@ import type { ApiSessionUser } from '@eggeo/api-client';
 import { appText } from '@eggeo/domain';
 import { EggeoActionPanel, type EggeoActionPanelItem } from '@eggeo/ui';
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
-import { api } from '../../lib/api';
+import { Alert, Linking, View } from 'react-native';
+import { API_BASE_URL, api } from '../../lib/api';
 import { clearOfflineEggStorage } from '../../lib/offlineEggs';
 import { type MobilePage, setupPages } from '../routes';
 import { ScreenTitle, viewStyles } from '../shared';
@@ -14,7 +14,7 @@ export function PanelView({
   user,
 }: {
   onNavigate: (page: MobilePage) => void;
-  onSignedOut: () => void;
+  onSignedOut: () => Promise<void>;
   user: ApiSessionUser;
 }) {
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -24,10 +24,12 @@ export function PanelView({
     setIsSigningOut(true);
 
     try {
-      await api.logout();
+      await onSignedOut();
+      await api.logout().catch(() => undefined);
+    } catch {
+      Alert.alert('Unable to sign out', 'Your device could not save the sign-out. Please try again.');
     } finally {
       setIsSigningOut(false);
-      onSignedOut();
     }
   }
 
@@ -37,7 +39,7 @@ export function PanelView({
     try {
       await api.deleteAccount();
       await clearOfflineEggStorage();
-      onSignedOut();
+      await onSignedOut();
     } catch (error) {
       Alert.alert(appText.auth.messages.unableToDeleteAccount, error instanceof Error ? error.message : undefined);
     } finally {
@@ -61,6 +63,7 @@ export function PanelView({
 
   const actions: EggeoActionPanelItem[] = [
     ...setupPages.map((item) => ({ intent: 'secondary' as const, key: item.key, label: item.label })),
+    { intent: 'secondary', key: 'privacy', label: 'Privacy Policy' },
     { intent: 'danger', isLoading: isDeletingAccount, key: 'delete-account', label: appText.common.actions.deleteAccount },
     { intent: 'ghost', isLoading: isSigningOut, key: 'sign-out', label: appText.common.actions.signOut },
   ];
@@ -71,6 +74,13 @@ export function PanelView({
       <EggeoActionPanel
         items={actions}
         onSelect={(key) => {
+          if (key === 'privacy') {
+            void Linking.openURL(`${API_BASE_URL.replace(/\/$/, '')}/privacy`).catch(() => {
+              Alert.alert('Privacy Policy', 'Connect to the internet to open the privacy policy.');
+            });
+            return;
+          }
+
           if (key === 'delete-account') {
             confirmDeleteAccount();
             return;

@@ -8,6 +8,7 @@ export * from './EventPicker';
 export * from './EventQrCard';
 export * from './NavBar';
 export * from './NavMenuButton';
+export * from './OfflineBanner';
 export * from './Panel';
 export * from './primitives';
 export * from './provider';

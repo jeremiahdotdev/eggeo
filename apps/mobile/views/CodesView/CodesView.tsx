@@ -44,8 +44,12 @@ export function CodesView({
   useEffect(load, [load]);
 
   async function deleteEgg(id: string) {
-    await api.deleteEgg(id);
-    load();
+    try {
+      await api.deleteEgg(id);
+      load();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to delete egg.');
+    }
   }
 
   return (

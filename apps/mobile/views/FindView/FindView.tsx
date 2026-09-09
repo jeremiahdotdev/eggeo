@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { api } from '../../lib/api';
 import { getEggCode, isUuid, parseScanTarget } from '../../lib/egg';
-import { enqueueOfflineEggAction, isOfflineError } from '../../lib/offlineEggs';
+import { cacheEgg, enqueueOfflineEggAction, getCachedEgg, isOfflineError, notifyEggChanges } from '../../lib/offlineEggs';
+import { HuntScore } from '../../components/HuntScore';
 import { QrScanner } from '../../components/QrScanner';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 import { styles } from './FindView.styles';
@@ -15,9 +16,13 @@ const offlineCollectMessage = "Saved offline. We'll collect this egg when you're
 
 export function FindView({
   showTitle = true,
+  selectedEventId = '',
+  offlineSyncRevision = 0,
   onEventsChanged,
 }: {
   showTitle?: boolean;
+  selectedEventId?: string;
+  offlineSyncRevision?: number;
   onEventsChanged?: (preferredEventId?: string) => Promise<void> | void;
 }) {
   const [code, setCode] = useState('');
@@ -47,11 +52,14 @@ export function FindView({
       }
 
       const response = await api.findEgg(id);
+      await cacheEgg(response.Egg).catch(() => undefined);
       setFoundEgg(response.Egg);
+      notifyEggChanges();
     } catch (error) {
       if (target.type === 'egg' && (await isOfflineError(error))) {
         await enqueueOfflineEggAction('findEgg', id);
-        setFoundEgg(null);
+        const cachedEgg = await getCachedEgg(id);
+        setFoundEgg(cachedEgg ?? { id, title: 'Egg saved offline', description: 'Details will be available when you reconnect.' });
         setMessage(offlineFindMessage);
         return;
       }
@@ -69,10 +77,11 @@ export function FindView({
 
     try {
       await api.collectEgg(id);
+      notifyEggChanges();
       setMessage(appText.eggs.messages.collected);
     } catch (error) {
       if (await isOfflineError(error)) {
-        await enqueueOfflineEggAction('collectEgg', id);
+        await enqueueOfflineEggAction('collectEgg', id, { egg: foundEgg ?? undefined });
         setMessage(offlineCollectMessage);
         return;
       }
@@ -94,6 +103,7 @@ export function FindView({
   return (
     <View style={viewStyles.stack}>
       {showTitle && <ScreenTitle>{appText.nav.find}</ScreenTitle>}
+      <HuntScore eventId={selectedEventId} revision={offlineSyncRevision} />
       <QrScanner disabled={isBusy} onDetect={findEgg} />
       <ScreenMessage>{message}</ScreenMessage>
       {foundEgg && (
@@ -108,7 +118,7 @@ export function FindView({
             <EggeoText style={[viewStyles.centerText, !foundEgg.description ? styles.mutedText : undefined]}>
               {foundEgg.description || appText.eggs.labels.noDescription}
             </EggeoText>
-            <EggeoText style={styles.pointsText}>{appText.eggs.points(foundEgg.points)}</EggeoText>
+            {foundEgg.points != null && <EggeoText style={styles.pointsText}>{appText.eggs.points(foundEgg.points)}</EggeoText>}
           </View>
           <View style={styles.actionStack}>
             <EggeoButton disabled={isBusy || wasCollected} onPress={collectEgg}>

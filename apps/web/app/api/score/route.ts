@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     const { eventId } = getScoreQuery(request);
 
     if (eventId && !(await isEventMember(session.username, eventId))) {
-      return ok({ points: 0 });
+      return ok({ points: 0, foundEggIds: [] });
     }
 
     const data = await prisma.userEgg.findMany({
@@ -44,6 +44,7 @@ export async function GET(request: Request) {
         username: session.username,
       },
       select: {
+        eggId: true,
         Egg: {
           select: {
             points: true,
@@ -52,7 +53,7 @@ export async function GET(request: Request) {
       },
     });
 
-    return ok({ points: sumEggPoints(data) });
+    return ok({ points: sumEggPoints(data), foundEggIds: data.map(record => record.eggId) });
   } catch (error) {
     return apiError(error);
   }
@@ -68,7 +69,7 @@ export async function DELETE(request: Request) {
     }
 
     if (!(await isEventMember(session.username, eventId))) {
-      return ok({ points: 0 });
+      return ok({ points: 0, foundEggIds: [] });
     }
 
     await prisma.userEgg.deleteMany({
@@ -80,7 +81,7 @@ export async function DELETE(request: Request) {
       },
     });
 
-    return ok({ points: 0 });
+    return ok({ points: 0, foundEggIds: [] });
   } catch (error) {
     return apiError(error);
   }

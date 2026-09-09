@@ -8,7 +8,6 @@ const links: EggeoActionPanelItem[] = [
   { href: '/codes', key: 'codes', label: appText.nav.codes },
   { href: '/create', key: 'create', label: appText.nav.create },
   { href: '/events', key: 'events', label: appText.nav.events },
-  { href: '/hide', key: 'hide', label: appText.nav.hide },
   { href: '/score', key: 'score', label: appText.nav.score },
   { href: '/signout', intent: 'ghost', key: 'sign-out', label: appText.common.actions.signOut },
 ];

@@ -47,7 +47,7 @@ export function EggeoNavBar({
     return (
       <div className={className ?? 'nav-inner'} style={flattenedStyle}>
         <a href={brandHref ?? '#'} style={webStyles.brand}>
-          <EggIcon size={34} seed="header-eggeo" strokeWidth={7} />
+          <EggIcon size={34} seed="header-eggeo" strokeWidth={12} />
           <EggeoText colorized style={webStyles.brandText as EggeoStyle}>
             {brandLabel}
           </EggeoText>
@@ -105,7 +105,7 @@ export function EggeoNavBar({
   return (
     <View style={[styles.nativeShell, style]}>
       <Pressable accessibilityRole="button" onPress={onBrandPress} style={styles.nativeBrand}>
-        <EggIcon seed="header-eggeo" size={38} strokeWidth={6} />
+        <EggIcon seed="header-eggeo" size={38} strokeWidth={8} />
         <EggeoText colorized style={styles.nativeBrandText}>
           {brandLabel}
         </EggeoText>

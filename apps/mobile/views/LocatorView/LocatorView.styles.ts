@@ -4,17 +4,18 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FBBF24',
     borderColor: eggeoColors.border,
     borderRadius: 999,
     borderWidth: 2,
-    height: 46,
+    height: 42,
+    flexShrink: 0,
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.16,
     shadowRadius: 0,
-    width: 46,
+    width: 42,
   },
   emptyMap: {
     alignItems: 'center',
@@ -42,17 +43,28 @@ export const styles = StyleSheet.create({
   popover: {
     bottom: 102,
     elevation: 7,
-    left: 18,
+    width: 300,
+    maxWidth: '90%',
     maxHeight: '48%',
     position: 'absolute',
     right: 18,
     zIndex: 6,
   },
   popoverContent: {
-    gap: 14,
+    gap: 8,
   },
   popoverPanel: {
     maxHeight: '100%',
+    padding: 12,
+  },
+  popoverTitle: {
+    flex: 1,
+    fontWeight: '900',
+    fontSize: 18,
+  },
+  popoverDescription: {
+    fontSize: 16,
+    lineHeight: 22,
   },
   screen: {
     flex: 1,

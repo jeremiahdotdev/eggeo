@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 const signedInLinks: EggeoNavItem[] = [
   { href: '/leaderboard', key: 'leaderboard', label: appText.nav.leaderboard },
   { href: '/find', key: 'find', label: appText.nav.find },
+  { href: '/hide', key: 'hide', label: appText.nav.hide },
   { href: '/locator', key: 'locator', label: appText.nav.locator },
   { href: '/panel', key: 'panel', label: appText.nav.panel },
 ];

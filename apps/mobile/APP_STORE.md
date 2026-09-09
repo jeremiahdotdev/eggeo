@@ -47,9 +47,11 @@ For subsequent uploads, increment `expo.ios.buildNumber` in `app.json` and run `
 
 Internal testing does not require a finished public App Store listing. External testing requires beta information and may require Apple's beta review.
 
+See [OFFLINE.md](./OFFLINE.md) for offline behavior and device verification steps.
+
 ## Public or unlisted release later
 
-- Add an accessible privacy policy link inside the native mobile app; the web footer does not provide one there.
+- Verify the Privacy Policy action on the native User page opens the public policy.
 - Verify account deletion, permissions, camera scanning, maps, login persistence, and offline sync on a physical iPhone.
 - Complete App Store privacy disclosures, age rating, pricing and availability, screenshots, and reviewer contact information.
 - Supply a working reviewer account, demo event, and scannable QR codes. See `app-store-review-notes.md`; enter credentials directly in App Store Connect rather than committing them.

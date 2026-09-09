@@ -3,6 +3,7 @@ import type { AuthCredentials, CreateAccountInput } from '@eggeo/validation';
 export type ApiClientOptions = {
   baseUrl: string;
   fetchImpl?: typeof fetch;
+  requestTimeoutMs?: number;
 };
 
 export type ApiSessionUser = {
@@ -18,6 +19,7 @@ export type ApiLeaderboardEntry = {
 
 export type ApiScore = {
   points: number;
+  foundEggIds?: string[];
 };
 
 export type ApiStatusResponse = {
@@ -79,7 +81,21 @@ function getSetCookieHeaders(headers: Headers) {
   return setCookie ? [setCookie] : [];
 }
 
-export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions) {
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+export class ApiNetworkError extends Error {
+  constructor() {
+    super('Unable to connect. Please try again when online.');
+    this.name = 'ApiNetworkError';
+  }
+}
+
+export function createApiClient({ baseUrl, fetchImpl = fetch, requestTimeoutMs }: ApiClientOptions) {
   let cookieHeader: string | undefined;
 
   function storeSessionCookie(headers: Headers) {
@@ -105,20 +121,30 @@ export function createApiClient({ baseUrl, fetchImpl = fetch }: ApiClientOptions
       headers.set('cookie', cookieHeader);
     }
 
-    const response = await fetchImpl(joinUrl(baseUrl, path), {
-      ...init,
-      credentials: 'include',
-      method: init?.method ?? (body ? 'POST' : 'GET'),
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    const controller = requestTimeoutMs ? new AbortController() : undefined;
+    const timeout = controller ? setTimeout(() => controller.abort(), requestTimeoutMs) : undefined;
+    let response: Response;
+    try {
+      response = await fetchImpl(joinUrl(baseUrl, path), {
+        ...init,
+        signal: controller?.signal ?? init?.signal,
+        credentials: 'include',
+        method: init?.method ?? (body ? 'POST' : 'GET'),
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch {
+      throw new ApiNetworkError();
+    } finally {
+      if (timeout !== undefined) clearTimeout(timeout);
+    }
 
     storeSessionCookie(response.headers);
 
     const payload = await response.json().catch(() => undefined);
 
     if (!response.ok) {
-      throw new Error(payload?.message ?? 'Request failed.');
+      throw new ApiError(payload?.message ?? 'Request failed.', response.status);
     }
 
     return payload as T;

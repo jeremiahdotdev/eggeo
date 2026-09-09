@@ -6,8 +6,9 @@ import { X } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
+import { HuntScore } from '../../components/HuntScore';
 import { api } from '../../lib/api';
-import { getCachedNearbyEggs, setCachedNearbyEggs } from '../../lib/offlineEggs';
+import { applyQueuedEggActions, getCachedNearbyEggs, setCachedNearbyEggs } from '../../lib/offlineEggs';
 import { styles } from './LocatorView.styles';
 import { ScreenTitle, viewStyles } from '../shared';
 
@@ -48,7 +49,7 @@ export function LocatorView({
     try {
       const nearby = await api.getNearbyEggs({ lat: coords.latitude, lng: coords.longitude }, nextEventId);
       const visibleEggs = nearby.filter((egg) => parseCoords(egg.coords));
-      setEggs(visibleEggs);
+      setEggs(await applyQueuedEggActions(nextEventId, visibleEggs));
       setMessage('');
       await setCachedNearbyEggs(nextEventId, visibleEggs);
     } catch (error) {
@@ -82,6 +83,8 @@ export function LocatorView({
 
       if (isMounted && cachedEggs.length > 0) {
         setEggs(cachedEggs);
+        const coords = parseCoords(cachedEggs[0].coords);
+        if (coords) setRegion(current => current ?? { ...coords, latitudeDelta, longitudeDelta });
       }
     }
 
@@ -104,7 +107,7 @@ export function LocatorView({
         return;
       }
 
-      subscription = await Location.watchPositionAsync(
+      const nextSubscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
           distanceInterval: 5,
@@ -125,12 +128,16 @@ export function LocatorView({
           setRegion(nextRegion);
           setMessage('');
           mapRef.current?.animateToRegion(nextRegion, 300);
-          void loadNearby(nextRegion);
+
         },
       );
+      if (isMounted) subscription = nextSubscription;
+      else nextSubscription.remove();
     }
 
-    void watchLocation();
+    void watchLocation().catch(() => {
+      if (isMounted) setMessage('Location is unavailable. Showing saved egg locations when available.');
+    });
 
     return () => {
       isMounted = false;
@@ -151,7 +158,7 @@ export function LocatorView({
 
             return (
               <Marker key={egg.id} coordinate={coords} onPress={() => setSelectedEgg(egg)}>
-                <EggIcon color={egg.color} seed={egg.id} size={36} strokeWidth={5} />
+                <EggIcon color={egg.color} seed={egg.id} size={36} strokeWidth={6} />
               </Marker>
             );
           })}
@@ -162,28 +169,23 @@ export function LocatorView({
         </View>
       )}
       <View pointerEvents="box-none" style={styles.overlayLayer}>
-        {message && (
-          <View style={styles.status}>
-            <EggeoPanel>
-              <EggeoText style={viewStyles.centerText}>{message}</EggeoText>
-            </EggeoPanel>
-          </View>
-        )}
+        <View style={styles.status}><EggeoPanel>
+          <HuntScore eventId={eventId} revision={offlineSyncRevision} />
+          {Boolean(message) && <EggeoText>{message}</EggeoText>}
+        </EggeoPanel></View>
         {selectedEgg && (
           <View style={styles.popover}>
             <EggeoPanel style={styles.popoverPanel}>
               <ScrollView contentContainerStyle={styles.popoverContent} showsVerticalScrollIndicator={false}>
                 <View style={viewStyles.row}>
-                  <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
+                  <EggeoText style={styles.popoverTitle}>
+                    {selectedEgg.title || appText.eggs.labels.untitled}
+                  </EggeoText>
                   <Pressable accessibilityLabel={appText.common.actions.close} accessibilityRole="button" onPress={() => setSelectedEgg(null)} style={styles.closeButton}>
-                    <X color="#111111" size={28} strokeWidth={3} />
+                    <X color="#111111" size={24} strokeWidth={3} />
                   </Pressable>
                 </View>
-                <EggeoText colorized style={viewStyles.cardTitle}>
-                  {selectedEgg.title || appText.eggs.labels.untitled}
-                </EggeoText>
-                {selectedEgg.description && <EggeoText style={viewStyles.centerText}>{selectedEgg.description}</EggeoText>}
-                <EggeoText style={viewStyles.centerText}>{appText.eggs.points(selectedEgg.points)}</EggeoText>
+                {selectedEgg.description && <EggeoText style={styles.popoverDescription}>{selectedEgg.description}</EggeoText>}
               </ScrollView>
             </EggeoPanel>
           </View>

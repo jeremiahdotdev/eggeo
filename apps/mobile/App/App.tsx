@@ -1,14 +1,16 @@
-import type { ApiEvent, ApiSessionUser } from '@eggeo/api-client';
+import type { ApiEvent } from '@eggeo/api-client';
 import { EGG_DEFAULT_POINTS, appText } from '@eggeo/domain';
-import { EggeoAuthPanel, EggeoNavBar, EggeoSkyScene, EggeoTitle, EggeoUIProvider, type AuthPanelMode } from '@eggeo/ui';
-import NetInfo from '@react-native-community/netinfo';
+import { EggeoAuthPanel, EggeoNavBar, EggeoOfflineBanner, EggeoSkyScene, EggeoText, EggeoTitle, EggeoUIProvider, type AuthPanelMode } from '@eggeo/ui';
 import { ComicNeue_700Bold, useFonts } from '@expo-google-fonts/comic-neue';
 import { StatusBar } from 'expo-status-bar';
 import { Search, X } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View } from 'react-native';
-import { api } from '../lib/api';
-import { processOfflineEggQueue } from '../lib/offlineEggs';
+import { accountStorage, api } from '../lib/api';
+import { getSavedEvents, saveEvents } from '../lib/huntStorage';
+import { isNetworkAvailable, isOfflineError, reportOffline } from '../lib/connectivity';
+import { useMobileSession } from '../lib/useMobileSession';
+import { processOfflineEggQueue, subscribeEggChanges } from '../lib/offlineEggs';
 import { styles } from './App.styles';
 import { CodesView } from '../views/CodesView';
 import { CreateView } from '../views/CreateView';
@@ -22,12 +24,15 @@ import { PanelView } from '../views/PanelView';
 import { ScoreView } from '../views/ScoreView';
 import { type MobilePage, primaryPages } from '../views/routes';
 
-const noScrollPages = new Set<MobilePage>(['dashboard', 'find', 'locator', 'panel', 'score', 'create', 'hide']);
+const offlinePages = new Set<MobilePage>(['dashboard', 'find', 'hide', 'locator']);
+
+const noScrollPages = new Set<MobilePage>(['dashboard', 'find', 'locator', 'score', 'create', 'hide']);
 
 export default function App() {
   const [fontsLoaded] = useFonts({ ComicNeue_700Bold });
-  const [user, setUser] = useState<ApiSessionUser | null>(null);
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const { user, isCheckingSession, isOffline, isSessionVerified, sessionRevision, acceptAccount, forgetAccount } = useMobileSession();
+  const activeUsername = useRef<string | null>(null);
+  activeUsername.current = user?.username ?? null;
   const [page, setPage] = useState<MobilePage>('dashboard');
   const [authMode, setAuthMode] = useState<AuthPanelMode>('login');
   const [authName, setAuthName] = useState('');
@@ -41,38 +46,13 @@ export default function App() {
   const [selectedEventId, setSelectedEventId] = useState('');
   const [offlineSyncRevision, setOfflineSyncRevision] = useState(0);
   const isSyncingOfflineQueue = useRef(false);
+  const eventAccount = useRef<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
-
-    api
-      .getMe()
-      .then((session) => {
-        if (isMounted) {
-          setUser(session.user);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsCheckingSession(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (page !== 'locator') {
+    if (!user || page !== 'locator') {
       setIsMapFindOpen(false);
     }
-  }, [page]);
+  }, [page, user?.username]);
 
   const loadEvents = useCallback(async (preferredEventId?: string) => {
     if (!user) {
@@ -81,24 +61,43 @@ export default function App() {
       return;
     }
 
+    const username = user.username;
+    if (eventAccount.current !== username) {
+      eventAccount.current = username;
+      setEvents([]);
+      setSelectedEventId('');
+    }
     setIsLoadingEvents(true);
     try {
-      const nextEvents = await api.getEvents();
+      const savedEventId = await accountStorage.getSelectedEvent(username);
+      let nextEvents: ApiEvent[];
+      if (!(await isNetworkAvailable())) {
+        reportOffline(true);
+        nextEvents = await getSavedEvents(username) ?? [];
+      } else {
+        try {
+          nextEvents = await api.getEvents();
+          await saveEvents(username, nextEvents).catch(() => undefined);
+        } catch (error) {
+          if (!(await isOfflineError(error))) throw error;
+          nextEvents = await getSavedEvents(username) ?? [];
+        }
+      }
+      if (activeUsername.current !== username) return;
       setEvents(nextEvents);
       setSelectedEventId((currentEventId) => {
-        const nextEventId = preferredEventId || currentEventId;
+        const nextEventId = preferredEventId || currentEventId || savedEventId;
         return nextEvents.some((event) => event.id === nextEventId) ? nextEventId : nextEvents[0]?.id || '';
       });
     } catch {
-      setEvents([]);
-      setSelectedEventId('');
+      // Keep the current event list when the network is unavailable.
     } finally {
-      setIsLoadingEvents(false);
+      if (activeUsername.current === username) setIsLoadingEvents(false);
     }
-  }, [user]);
+  }, [user?.username]);
 
   const syncOfflineEggQueue = useCallback(async () => {
-    if (!user || isSyncingOfflineQueue.current) {
+    if (!user || !isSessionVerified || isOffline || isSyncingOfflineQueue.current) {
       return;
     }
 
@@ -111,10 +110,12 @@ export default function App() {
         setOfflineSyncRevision((revision) => revision + 1);
         await loadEvents();
       }
+    } catch {
+      // The queue remains stored for the next reconnect.
     } finally {
       isSyncingOfflineQueue.current = false;
     }
-  }, [loadEvents, user]);
+  }, [loadEvents, user?.username, isSessionVerified, isOffline]);
 
   useEffect(() => {
     if (!user) {
@@ -125,19 +126,16 @@ export default function App() {
 
     void loadEvents();
     void syncOfflineEggQueue();
-  }, [loadEvents, syncOfflineEggQueue, user]);
+  }, [loadEvents, syncOfflineEggQueue, user?.username, sessionRevision]);
 
-  useEffect(() => {
-    if (!user) {
-      return undefined;
-    }
+  useEffect(() => subscribeEggChanges(() => {
+    setOfflineSyncRevision(revision => revision + 1);
+  }), []);
 
-    return NetInfo.addEventListener((state) => {
-      if (state.isConnected === true && state.isInternetReachable !== false) {
-        void syncOfflineEggQueue();
-      }
-    });
-  }, [syncOfflineEggQueue, user]);
+  function selectEvent(eventId: string) {
+    setSelectedEventId(eventId);
+    if (user) void accountStorage.setSelectedEvent(user.username, eventId).catch(() => undefined);
+  }
 
   if (!fontsLoaded || isCheckingSession) {
     return null;
@@ -148,18 +146,23 @@ export default function App() {
   }
 
   function renderPage() {
+    if ((!isSessionVerified || isOffline) && !offlinePages.has(page)) {
+      return <EggeoText>{page === 'panel'
+        ? 'You must be logged in online to use account settings. Your saved account is still available for offline hunting.'
+        : 'Connect to the internet to use this page.'}</EggeoText>;
+    }
     return (
       <>
-        {page === 'dashboard' && <DashboardView events={events} offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} onSelectEvent={setSelectedEventId} />}
-        {page === 'leaderboard' && <LeaderboardView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
-        {page === 'events' && <EventsView events={events} isLoading={isLoadingEvents} onEventsChanged={loadEvents} onSelectEvent={setSelectedEventId} />}
-        {page === 'find' && <FindView onEventsChanged={loadEvents} />}
-        {page === 'locator' && <LocatorView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
-        {page === 'panel' && user && <PanelView onNavigate={navigate} onSignedOut={() => setUser(null)} user={user} />}
+        {page === 'dashboard' && <DashboardView events={events} offlineSyncRevision={offlineSyncRevision + sessionRevision} selectedEventId={selectedEventId} onSelectEvent={selectEvent} />}
+        {page === 'leaderboard' && <LeaderboardView offlineSyncRevision={offlineSyncRevision + sessionRevision} selectedEventId={selectedEventId} />}
+        {page === 'events' && <EventsView events={events} isLoading={isLoadingEvents} onEventsChanged={loadEvents} onSelectEvent={selectEvent} />}
+        {page === 'find' && <FindView selectedEventId={selectedEventId} offlineSyncRevision={offlineSyncRevision + sessionRevision} onEventsChanged={loadEvents} />}
+        {page === 'locator' && <LocatorView offlineSyncRevision={offlineSyncRevision + sessionRevision} selectedEventId={selectedEventId} />}
+        {page === 'panel' && user && <PanelView onNavigate={navigate} onSignedOut={forgetAccount} user={user} />}
         {page === 'codes' && <CodesView events={events} selectedEventId={selectedEventId} />}
         {page === 'create' && <CreateView events={events} selectedEventId={selectedEventId} />}
-        {page === 'hide' && <HideView />}
-        {page === 'score' && <ScoreView offlineSyncRevision={offlineSyncRevision} selectedEventId={selectedEventId} />}
+        {page === 'hide' && <HideView selectedEventId={selectedEventId} offlineSyncRevision={offlineSyncRevision + sessionRevision} />}
+        {page === 'score' && <ScoreView offlineSyncRevision={offlineSyncRevision + sessionRevision} selectedEventId={selectedEventId} />}
       </>
     );
   }
@@ -179,7 +182,7 @@ export default function App() {
         setPage('dashboard');
         setIsMapFindOpen(false);
         setAuthPassword('');
-        setUser(session.user);
+        await acceptAccount(session.user);
         return;
       }
 
@@ -200,10 +203,13 @@ export default function App() {
             <EggeoNavBar
               activeKey={page}
               brandLabel={appText.brand.title}
-              items={primaryPages}
+              items={isOffline || !isSessionVerified ? primaryPages.filter(item => offlinePages.has(item.key) || item.key === 'panel') : primaryPages}
               onBrandPress={() => navigate('dashboard')}
               onSelect={(key) => navigate(key as MobilePage)}
             />
+          )}
+          {(isOffline || (user && !isSessionVerified)) && (
+            <EggeoOfflineBanner isSignedIn={Boolean(user)} />
           )}
           <EggeoSkyScene>
             {!user && (
@@ -258,7 +264,7 @@ export default function App() {
                 </Pressable>
               </View>
               <ScrollView contentContainerStyle={styles.mapFindModalContent} showsVerticalScrollIndicator={false}>
-                <FindView showTitle={false} onEventsChanged={loadEvents} />
+                <FindView selectedEventId={selectedEventId} offlineSyncRevision={offlineSyncRevision + sessionRevision} showTitle={false} onEventsChanged={loadEvents} />
               </ScrollView>
             </Pressable>
           </Pressable>

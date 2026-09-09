@@ -2,12 +2,14 @@ import { appText } from '@eggeo/domain';
 import * as Location from 'expo-location';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { HuntScore } from '../../components/HuntScore';
 import { QrScanner } from '../../components/QrScanner';
 import { api } from '../../lib/api';
+import { enqueueOfflineEggAction, isOfflineError, notifyEggChanges } from '../../lib/offlineEggs';
 import { getEggCode, isUuid } from '../../lib/egg';
 import { ScreenMessage, ScreenTitle, viewStyles } from '../shared';
 
-export function HideView() {
+export function HideView({ selectedEventId, offlineSyncRevision = 0 }: { selectedEventId: string; offlineSyncRevision?: number }) {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,11 +33,19 @@ export function HideView() {
 
       const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
 
-      await api.hideEgg(id, {
+      const coords = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
-      });
-      setMessage(appText.eggs.messages.hidden);
+      };
+      try {
+        await api.hideEgg(id, coords);
+        notifyEggChanges();
+        setMessage(appText.eggs.messages.hidden);
+      } catch (error) {
+        if (!(await isOfflineError(error))) throw error;
+        await enqueueOfflineEggAction('hideEgg', id, { coords });
+        setMessage('Hidden offline. This location will sync when connected.');
+      }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : appText.eggs.messages.unableToHide);
     } finally {
@@ -46,6 +56,7 @@ export function HideView() {
   return (
     <View style={viewStyles.stack}>
       <ScreenTitle>{appText.nav.hide}</ScreenTitle>
+      <HuntScore eventId={selectedEventId} revision={offlineSyncRevision} />
       <QrScanner disabled={isSubmitting} onDetect={hideEgg} />
       <ScreenMessage>{message}</ScreenMessage>
     </View>
