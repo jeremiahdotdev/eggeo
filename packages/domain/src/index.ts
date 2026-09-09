@@ -24,6 +24,7 @@ export const appText = {
       genericError: 'Something went wrong.',
       requestFailed: 'Request failed.',
       signedIn: 'Signed in.',
+      sessionNotEstablished: 'Unable to confirm your sign-in. Please try again.',
       unableToDeleteAccount: 'Unable to delete account.',
       readyToHunt(points: number) {
         return `Ready to hunt. Default eggs are worth ${points} point.`;

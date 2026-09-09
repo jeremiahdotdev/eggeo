@@ -9,6 +9,7 @@
   --border: #111;
   --grass: #00da34;
   --grass-dark: #00a528;
+  --footer-height: 66px;
   --font-comic: "Comic Sans MS", "Comic Sans", "Comic Neue", "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
@@ -53,16 +54,19 @@ button:disabled {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding-bottom: calc(var(--footer-height) + env(safe-area-inset-bottom, 0px));
   overflow-x: clip;
 }
 
-body:has(.home-hero) {
+body:has(.home-hero),
+body:has(.locator-scene) {
   height: 100dvh;
   overflow: hidden;
 }
 
-body:has(.home-hero) .app-shell {
+body:has(.home-hero) .app-shell,
+body:has(.locator-scene) .app-shell {
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
@@ -73,22 +77,28 @@ body:has(.home-hero) .app-shell {
   background: var(--paper);
   border-color: var(--border);
   box-shadow: 0 8px 20px rgb(0 0 0 / 0.14);
-  position: sticky;
   z-index: 20;
 }
 
 .top-nav {
+  position: sticky;
   top: 0;
   border-bottom: 2px solid var(--border);
 }
 
 .bottom-nav {
+  position: fixed;
+  right: 0;
   bottom: 0;
+  left: 0;
+  height: calc(var(--footer-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   border-top: 2px solid var(--border);
 }
 
 .bottom-nav .nav-inner {
-  justify-content: center;
+  height: calc(var(--footer-height) - 2px);
+  justify-content: space-between;
 }
 
 .bottom-nav .nav-links {
@@ -766,7 +776,7 @@ body:has(.home-hero) .app-shell {
 }
 
 .locator-scene {
-  min-height: 100%;
+  min-height: 0;
   background: #e5e7eb;
   overflow: hidden;
   padding: 0;
@@ -777,6 +787,10 @@ body:has(.home-hero) .app-shell {
 }
 
 @media print {
+  .app-shell {
+    padding-bottom: 0;
+  }
+
   .top-nav,
   .bottom-nav,
   .no-print {

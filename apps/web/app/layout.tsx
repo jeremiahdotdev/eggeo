@@ -32,6 +32,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <EventSelectionProvider initialEvents={initialEvents}>{children}</EventSelectionProvider>
           <footer className="bottom-nav">
             <div className="nav-inner">
+              <a className="footer-link" href="/privacy">
+                <EggeoText colorized>Privacy Policy</EggeoText>
+              </a>
               <a className="footer-link" href="https://jeremiah.dev" rel="noreferrer" target="_blank">
                 <EggeoText colorized>jeremiah.dev</EggeoText>
               </a>

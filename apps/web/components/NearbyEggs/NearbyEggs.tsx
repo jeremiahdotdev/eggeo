@@ -1,6 +1,7 @@
 'use client';
 
 import { GoogleMap, OverlayView, useJsApiLoader } from '@react-google-maps/api';
+import { X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { appText } from '@eggeo/domain';
 import { EggIcon, EggeoEventPicker, EggeoText, UserMarker } from '@eggeo/ui';
@@ -168,7 +169,7 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
         >
           <OverlayView mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET} position={center}>
             <div className={styles.userMarker}>
-              <UserMarker size={42} />
+              <UserMarker size={42} strokeWidth={2.5} />
             </div>
           </OverlayView>
           {eggs.map((egg) => {
@@ -181,7 +182,7 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
             return (
               <OverlayView key={`${egg.id}-${position.lat}-${position.lng}`} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET} position={position}>
                 <button className={styles.eggMarker} onClick={() => setSelectedEgg(egg)} type="button">
-                  <EggIcon color={egg.color} seed={egg.id} size={32} strokeWidth={5} />
+                  <EggIcon color={egg.color} seed={egg.id} size={32} strokeWidth={6} />
                 </button>
               </OverlayView>
             );
@@ -192,14 +193,12 @@ export function NearbyEggs({ mapsApiKey }: { mapsApiKey: string }) {
       {selectedEgg && (
         <aside className={styles.popover}>
           <div className={styles.row}>
-            <EggIcon color={selectedEgg.color} seed={selectedEgg.id} size={54} />
+            <strong>{selectedEgg.title || 'Hidden egg'}</strong>
             <button aria-label="Close" className={styles.closeButton} onClick={() => setSelectedEgg(null)} type="button">
-              <span aria-hidden="true">X</span>
+              <X aria-hidden="true" size={24} strokeWidth={3} />
             </button>
           </div>
-          <strong>{selectedEgg.title || 'Hidden egg'}</strong>
           {selectedEgg.description && <p>{selectedEgg.description}</p>}
-          <span>{Math.abs(selectedEgg.points ?? 1) === 1 ? `${selectedEgg.points ?? 1} pt.` : `${selectedEgg.points ?? 1} pts.`}</span>
         </aside>
       )}
     </section>

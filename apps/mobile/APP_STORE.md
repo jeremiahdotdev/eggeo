@@ -1,49 +1,62 @@
-# Eggeo App Store Prep
+# Local iOS builds and TestFlight
 
-This folder has the local config needed for an App Store submission. Apple/App Store Connect setup still has to happen in the browser with the Apple Developer account.
+Eggeo uses Xcode on your Mac for iOS builds, signing, and uploading to App Store Connect. No Expo account or EAS service is required.
 
-## Already Configured Locally
+## Prepare the project
 
-- iOS bundle ID: `dev.jeremiah.eggeo`
-- Android package: `dev.jeremiah.eggeo`
-- iPhone-only support
-- Camera and location permission copy
-- Export compliance flag for standard OS encryption
-- EAS build and submit profiles
-- EAS metadata file
-- Public support and privacy URLs:
-  - `https://eggs.jeremiah.dev/support`
-  - `https://eggs.jeremiah.dev/privacy`
-- In-app account deletion flow
+Install Xcode and CocoaPods (`brew install cocoapods`). Sign in to your Apple Developer account in Xcode Settings > Accounts.
 
-## Local Commands
-
-Run these from `apps/mobile`.
+Run from `apps/mobile`:
 
 ```sh
 pnpm run store:check
-pnpm run eas:init
-pnpm run store:build:ios
-pnpm run store:submit:ios
-pnpm run store:metadata:push
+pnpm run ios:prepare
+pnpm run ios:open
 ```
 
-## Manual Items Still Needed
+`ios:prepare` generates the native iOS project and installs CocoaPods dependencies. The generated `ios/` directory is ignored by Git. Regenerate after changing native dependencies or app configuration. Open the `.xcworkspace`, not the `.xcodeproj`.
 
-- Log in to Expo before `eas:init`.
-- Create the App Store Connect app record.
-- Create a reviewer demo account in production.
-- Fill `app-store-review-notes.md` with the demo credentials and reviewer phone.
-- Upload App Store screenshots.
-- Submit for App Review.
-- After approval or when ready for final distribution, request unlisted app distribution from Apple.
+For local development, `pnpm ios` builds and runs the app using Expo CLI.
 
-## Screenshot Checklist
+## Configure the release
 
-Capture at least one polished iPhone screenshot. Better set:
+Ensure `apps/mobile/.env` contains this before archiving; Expo bundles the value into the app:
 
-- Home with selected event and score
-- Map with egg markers
-- Find QR scanner
-- Ranking
-- Events or User panel
+```dotenv
+EXPO_PUBLIC_APP_URL=https://eggs.jeremiah.dev
+```
+
+In Xcode, select the Eggeo project and app target:
+
+1. Under Signing & Capabilities, enable automatic signing and select your paid Apple Developer team.
+2. Confirm the bundle identifier is `dev.jeremiah.eggeo`.
+3. Select the Eggeo scheme and a generic iOS device destination (not a simulator).
+4. Confirm the scheme's Archive action uses the Release configuration.
+
+Create an iOS app named Eggeo in App Store Connect with the same bundle identifier. Register the identifier in your Apple Developer account first if it is not available in the app creation form.
+
+## Archive and upload
+
+1. In Xcode choose Product > Archive.
+2. In Organizer select the archive, then Distribute App > App Store Connect, and follow the upload flow.
+3. After Apple processes the build, open Eggeo > TestFlight in App Store Connect. Resolve any compliance questions.
+4. Create an internal testing group, add your App Store Connect user, and assign the build.
+5. Accept the invitation in the TestFlight app on your iPhone.
+
+For subsequent uploads, increment `expo.ios.buildNumber` in `app.json` and run `pnpm run ios:prepare` before archiving. Generated project settings can be replaced by regeneration. You can persist your signing team using `expo.ios.appleTeamId` in `app.json` after selecting the correct team.
+
+Internal testing does not require a finished public App Store listing. External testing requires beta information and may require Apple's beta review.
+
+## Public or unlisted release later
+
+- Add an accessible privacy policy link inside the native mobile app; the web footer does not provide one there.
+- Verify account deletion, permissions, camera scanning, maps, login persistence, and offline sync on a physical iPhone.
+- Complete App Store privacy disclosures, age rating, pricing and availability, screenshots, and reviewer contact information.
+- Supply a working reviewer account, demo event, and scannable QR codes. See `app-store-review-notes.md`; enter credentials directly in App Store Connect rather than committing them.
+- Submit for App Review. For unlisted distribution, submit Apple's separate request when the app is ready for distribution and submitted for review.
+
+Support: https://eggs.jeremiah.dev/support
+
+Privacy: https://eggs.jeremiah.dev/privacy
+
+The existing EAS profiles and `store:build:ios` / `store:submit:ios` scripts remain optional cloud tooling; they are not used by this local workflow.

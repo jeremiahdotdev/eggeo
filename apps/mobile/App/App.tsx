@@ -176,11 +176,14 @@ export default function App() {
       await api.login({ email: authEmail, password: authPassword });
       const session = await api.getMe();
       if (session.user) {
+        setPage('dashboard');
+        setIsMapFindOpen(false);
+        setAuthPassword('');
         setUser(session.user);
         return;
       }
 
-      setAuthMessage(appText.auth.messages.signedIn);
+      setAuthMessage(appText.auth.messages.sessionNotEstablished);
     } catch (error) {
       setAuthMessage(error instanceof Error ? error.message : appText.auth.messages.requestFailed);
     } finally {
