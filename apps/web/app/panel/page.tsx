@@ -5,6 +5,7 @@ import { SkyScene } from '@/components/SkyScene';
 import styles from './page.module.css';
 
 const links: EggeoActionPanelItem[] = [
+  { href: '/leaderboard', key: 'leaderboard', label: appText.nav.leaderboard },
   { href: '/codes', key: 'codes', label: appText.nav.codes },
   { href: '/create', key: 'create', label: appText.nav.create },
   { href: '/events', key: 'events', label: appText.nav.events },

@@ -4,7 +4,6 @@ export type MobilePage = 'codes' | 'create' | 'dashboard' | 'events' | 'find' | 
 
 export const primaryPages: Array<{ key: MobilePage; label: string }> = [
   { key: 'dashboard', label: appText.nav.dashboard },
-  { key: 'leaderboard', label: appText.nav.leaderboard },
   { key: 'find', label: appText.nav.find },
   { key: 'hide', label: appText.nav.hide },
   { key: 'locator', label: appText.nav.locator },
@@ -12,6 +11,7 @@ export const primaryPages: Array<{ key: MobilePage; label: string }> = [
 ];
 
 export const setupPages: Array<{ key: MobilePage; label: string }> = [
+  { key: 'leaderboard', label: appText.nav.leaderboard },
   { key: 'codes', label: appText.nav.codes },
   { key: 'create', label: appText.nav.create },
   { key: 'events', label: appText.nav.events },
